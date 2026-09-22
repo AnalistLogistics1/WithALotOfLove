@@ -1,0 +1,2515 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#120821">
+<title>Una sorpresa para Doris 🌻</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Dancing+Script:wght@500;700&family=Great+Vibes&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+/* =====================================================================
+   PARA DORIS  ·  hoja de estilos
+   Paleta: girasol (#FFC93C), ámbar quemado (#C1660B), noche violeta
+   (#1A0B2E), crema papel (#F6ECE0), verde tallo (#2D6A4F)
+   ===================================================================== */
+
+:root{
+  --sol:#ffc93c;
+  --sol-claro:#ffe27a;
+  --ambar:#c1660b;
+  --noche:#1a0b2e;
+  --noche-2:#3b185f;
+  --crema:#f6ece0;
+  --tallo:#2d6a4f;
+  --tallo-osc:#143621;
+  --rosa:#ff4d6d;
+  --rosa-claro:#ff758f;
+  --tinta:#2b1b0e;
+  --f-titulo:'Pacifico', cursive;
+  --f-elegante:'Great Vibes', cursive;
+  --f-mano:'Dancing Script', cursive;
+  --f-texto:'Poppins', sans-serif;
+  --safe-t: env(safe-area-inset-top, 0px);
+  --safe-b: env(safe-area-inset-bottom, 0px);
+}
+
+*{ box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+
+html,body{
+  width:100%; height:100%;
+  overflow:hidden;
+  overscroll-behavior:none;
+  font-family:var(--f-texto);
+  background:#0b0713;
+  color:#fff;
+}
+
+#app{ position:fixed; top:0; left:0; right:0; bottom:0; overflow:hidden; }
+
+.scene{
+  position:absolute; top:0; left:0; width:100%; height:100%;
+  display:flex; flex-direction:column; align-items:center; justify-content:space-between;
+  padding: calc(6vh + var(--safe-t)) 0 calc(4vh + var(--safe-b)) 0;
+  opacity:0; visibility:hidden; pointer-events:none;
+  transition: opacity 1.2s ease, visibility 1.2s;
+  z-index:1;
+  overflow:hidden;
+}
+.scene.active{ opacity:1; visibility:visible; pointer-events:auto; z-index:10; }
+.scene.scrollable{ overflow-y:auto; -webkit-overflow-scrolling:touch; justify-content:flex-start; }
+
+/* ---------- botones ---------- */
+.btn{
+  padding:14px 34px;
+  font-family:var(--f-texto); font-size:clamp(1rem,4.4vw,1.2rem); font-weight:600;
+  color:#fff; border:none; border-radius:50px; cursor:pointer;
+  background:linear-gradient(45deg,var(--rosa),var(--rosa-claro));
+  box-shadow:0 8px 25px rgba(255,77,109,.45);
+  transition:transform .25s ease, opacity .5s ease;
+}
+.btn:active{ transform:scale(.95); }
+.btn:focus-visible{ outline:3px solid #fff; outline-offset:3px; }
+.btn-teal{ background:linear-gradient(45deg,#118ab2,#06d6a0); box-shadow:0 8px 25px rgba(6,214,160,.4); }
+.btn-sol{ background:linear-gradient(45deg,#e8a91d,var(--sol)); color:#3a2408; box-shadow:0 8px 25px rgba(255,201,60,.45); }
+
+.next-wrap{
+  position:absolute; left:0; right:0;
+  bottom:calc(18px + var(--safe-b));
+  display:flex; justify-content:center; z-index:70;
+  pointer-events:none;
+}
+.next-wrap .btn{ opacity:0; transform:translateY(18px); pointer-events:none; }
+.next-wrap .btn.show{ opacity:1; transform:translateY(0); pointer-events:auto; animation:latido 2.4s infinite; }
+@keyframes latido{
+  0%{ box-shadow:0 0 0 0 rgba(255,255,255,.35); }
+  70%{ box-shadow:0 0 0 16px rgba(255,255,255,0); }
+  100%{ box-shadow:0 0 0 0 rgba(255,255,255,0); }
+}
+
+/* ---------- HUD ---------- */
+#hud{
+  position:fixed; top:calc(10px + var(--safe-t)); right:12px;
+  display:flex; gap:8px; z-index:200;
+}
+.hud-btn{
+  width:38px; height:38px; border-radius:50%;
+  border:1px solid rgba(255,255,255,.28);
+  background:rgba(0,0,0,.28); backdrop-filter:blur(6px);
+  color:#fff; font-size:17px; line-height:1; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  opacity:.55; transition:opacity .3s;
+}
+.hud-btn:active{ opacity:1; }
+.hud-btn.off{ opacity:.3; text-decoration:line-through; }
+#progreso{
+  position:fixed; top:0; left:0; height:3px; width:100%;
+  background:rgba(255,255,255,.08); z-index:200;
+}
+#progreso i{
+  display:block; height:100%; width:0%;
+  background:linear-gradient(90deg,var(--ambar),var(--sol));
+  transition:width .8s ease;
+  box-shadow:0 0 10px var(--sol);
+}
+
+/* =====================================================================
+   ESCENA 1 · INTRO
+   ===================================================================== */
+#sc1{ background:radial-gradient(circle at center, var(--noche-2) 0%, var(--noche) 70%, #0d0518 100%); }
+
+.particles{ position:absolute; inset:0; overflow:hidden; z-index:1; pointer-events:none; }
+.particula{
+  position:absolute; font-size:clamp(16px,5vw,28px);
+  animation:subirParticula linear infinite; opacity:0;
+  filter:drop-shadow(0 0 6px rgba(255,221,87,.6));
+}
+@keyframes subirParticula{
+  0%{ transform:translateY(105vh) scale(.5) rotate(0deg); opacity:0; }
+  15%{ opacity:.85; } 85%{ opacity:.85; }
+  100%{ transform:translateY(-12vh) scale(1.2) rotate(360deg); opacity:0; }
+}
+
+.intro-top{ z-index:20; padding:0 6vw; text-align:center; }
+.intro-title{
+  font-family:var(--f-titulo);
+  font-size:clamp(1.7rem,6.6vw,2.7rem);
+  color:var(--sol-claro);
+  text-shadow:0 4px 18px rgba(255,221,87,.45);
+  opacity:0; transform:translateY(-20px);
+  line-height:1.35;
+}
+.intro-name{
+  font-family:var(--f-elegante);
+  font-size:clamp(3.2rem,15vw,5.5rem);
+  color:#fff; margin-top:2px;
+  text-shadow:0 0 25px rgba(255,201,60,.75), 0 0 60px rgba(255,201,60,.35);
+  opacity:0; transform:scale(.5);
+}
+.anim-baja{ animation:bajaFade 1.5s cubic-bezier(.2,.8,.2,1) forwards; }
+.anim-nombre{ animation:apareceNombre 1.2s cubic-bezier(.34,1.56,.64,1) forwards; }
+@keyframes bajaFade{ to{ transform:translateY(0); opacity:1; } }
+@keyframes apareceNombre{ to{ transform:scale(1); opacity:1; } }
+
+.images-container{
+  position:relative; width:92vw; max-width:420px; height:38vh;
+  display:flex; justify-content:center; align-items:center; z-index:5;
+}
+.photo-card{
+  position:absolute; border-radius:16px; overflow:hidden;
+  box-shadow:0 18px 40px rgba(0,0,0,.55);
+  border:3px solid rgba(255,255,255,.85);
+  opacity:0; background:#241041;
+}
+.photo-card img{ width:100%; height:100%; object-fit:cover; display:block; }
+.img-fallback{
+  width:100%; height:100%;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
+  background:linear-gradient(140deg,#4b2578,#241041);
+  color:#ffe27a; font-size:13px; text-align:center; padding:8px;
+}
+.img-fallback span{ font-size:38px; }
+
+#cardStitch{ width:55%; height:76%; left:4%; top:4%; transform:rotate(-8deg) translateX(-40px); z-index:2; }
+#cardFlores{ width:55%; height:70%; right:4%; bottom:4%; transform:rotate(8deg) scale(.5); z-index:3; }
+.anim-entra{ animation:entraIzq 1.5s cubic-bezier(.2,.8,.2,1) forwards; }
+.anim-pop{ animation:popEntra 1s cubic-bezier(.34,1.56,.64,1) forwards; }
+@keyframes entraIzq{ to{ transform:rotate(-8deg) translateX(0); opacity:1; } }
+@keyframes popEntra{ to{ transform:rotate(8deg) scale(1); opacity:1; } }
+
+.controls-wrapper{
+  position:relative; width:100%; min-height:130px; z-index:20;
+  display:flex; align-items:flex-end; justify-content:center;
+}
+.controls-wrapper .btn{ position:absolute; opacity:0; transform:translateY(20px); }
+.controls-wrapper .btn.show{ opacity:1; transform:translateY(0); animation:latido 2.2s infinite; }
+
+/* =====================================================================
+   ESCENA 2 · EL RAMO
+   ===================================================================== */
+#sc2{ background:radial-gradient(circle at center 85%, #1a2035 0%, #05070d 100%); justify-content:center; padding:0; }
+.estrellas{ position:absolute; inset:0; pointer-events:none; z-index:0; }
+.estrella{ position:absolute; background:#fff; border-radius:50%; }
+.mariposa{ position:absolute; font-size:clamp(1.2rem,5vw,1.8rem); opacity:0; z-index:30; animation:vuela 15s linear infinite; }
+@keyframes vuela{
+  0%{ transform:translate(0,0) rotate(10deg) scale(.8); opacity:0 }
+  10%{ opacity:1 }
+  25%{ transform:translate(28vw,-18vh) rotate(-10deg) scale(1.15) }
+  50%{ transform:translate(-18vw,-36vh) rotate(20deg) scale(.9) }
+  75%{ transform:translate(-34vw,-12vh) rotate(-20deg) scale(1.1) }
+  90%{ opacity:1 }
+  100%{ transform:translate(0,0) rotate(10deg) scale(.8); opacity:0 }
+}
+.ramo-title{
+  position:absolute; top:calc(8vh + var(--safe-t));
+  width:100%; text-align:center; padding:0 5vw;
+  font-family:var(--f-titulo); font-size:clamp(2rem,8vw,3.2rem);
+  color:#a2d2ff; text-shadow:0 0 22px rgba(162,210,255,.55);
+  opacity:0; transform:translateY(-20px); transition:all 2s ease; z-index:50;
+}
+.ramo-title.show{ opacity:1; transform:translateY(0); }
+#bouquetContainer{ position:absolute; bottom:-15vh; left:50%; transform:translateX(-50%); width:0; height:0; z-index:10; }
+.flower-wrapper{ position:absolute; bottom:0; left:0; transform-origin:bottom center; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; }
+.stem{
+  position:relative; width:clamp(6px,1.8vw,12px); height:0;
+  background:linear-gradient(to right,var(--tallo-osc),var(--tallo),var(--tallo-osc));
+  border-radius:10px 10px 0 0;
+  transition:height 6s cubic-bezier(.4,0,.2,1);
+}
+.stem-leaf{
+  position:absolute; width:clamp(30px,7vw,55px); height:clamp(15px,4vw,25px);
+  background:linear-gradient(45deg,var(--tallo-osc),var(--tallo));
+  transform:scale(0); transition:transform 2s cubic-bezier(.34,1.56,.64,1);
+  box-shadow:inset 2px 2px 5px rgba(255,255,255,.12); z-index:1;
+}
+.stem-leaf.left{ left:-2px; transform-origin:bottom right; border-radius:0 100% 0 100%; }
+.stem-leaf.right{ right:-2px; transform-origin:bottom left; border-radius:100% 0 100% 0; }
+.flower-head{
+  position:absolute; top:0; left:50%;
+  transform:translate(-50%,-50%) scale(0) rotate(-30deg);
+  /* Ajuste para que las flores escalen perfectamente en celulares y se mantengan juntas */
+  width:clamp(90px, 24vw, 150px); 
+  height:clamp(90px, 24vw, 150px);
+  transition:transform 2.5s cubic-bezier(.175,.885,.32,1.275);
+  display:flex; align-items:center; justify-content:center; z-index:10;
+}
+.flower-head.bloom{ transform:translate(-50%,-50%) scale(var(--s)) rotate(10deg); }
+.flower-svg{ width:100%; height:100%; filter:drop-shadow(0 10px 15px rgba(0,0,0,.5)); animation:mecer 6s ease-in-out infinite alternate; }
+@keyframes mecer{ from{ transform:rotate(-3deg) } to{ transform:rotate(3deg) } }
+
+/* =====================================================================
+   ESCENA 3 · PORTAL + MONITO
+   ===================================================================== */
+#sc3{ background:#000; justify-content:center; cursor:pointer; }
+#sc3 .halo-portal{
+  position:absolute; top:38%; left:50%; transform:translate(-50%,-50%);
+  width:min(120vw,620px); height:min(120vw,620px); border-radius:50%;
+  background:radial-gradient(circle, rgba(255,201,60,.30) 0%, rgba(255,160,20,.10) 38%, rgba(0,0,0,0) 68%);
+  animation:respira 4s ease-in-out infinite alternate; pointer-events:none;
+}
+@keyframes respira{ from{ transform:translate(-50%,-50%) scale(.92); opacity:.75 } to{ transform:translate(-50%,-50%) scale(1.1); opacity:1 } }
+.portal-flor{
+  position:absolute; top:38%; left:50%; transform:translate(-50%,-50%);
+  width:min(62vw,300px); height:min(62vw,300px); z-index:5;
+  filter:drop-shadow(0 0 30px rgba(255,190,50,.85));
+  animation:girasolLatido 3.4s ease-in-out infinite;
+}
+@keyframes girasolLatido{ 0%,100%{ transform:translate(-50%,-50%) scale(1) rotate(0) } 50%{ transform:translate(-50%,-50%) scale(1.06) rotate(4deg) } }
+.portal-texto{
+  position:absolute; top:60%; width:100%; text-align:center;
+  font-family:var(--f-mano); font-weight:700;
+  font-size:clamp(1.7rem,8vw,2.6rem); color:#ffe9a8;
+  text-shadow:0 0 12px rgba(255,201,60,.9), 0 0 34px rgba(255,150,0,.6);
+  animation:parpadeoTexto 2.6s ease-in-out infinite; z-index:6;
+}
+@keyframes parpadeoTexto{ 0%,100%{ opacity:.55 } 50%{ opacity:1 } }
+.mono-wrap{ 
+  position:absolute; bottom:calc(2vh + var(--safe-b)); left:0vw; 
+  width:min(38vw,180px); z-index:8; 
+}
+.mono-svg{ width:100%; height:auto; display:block; filter:drop-shadow(0 8px 20px rgba(0,0,0,.8)); animation:monoSalta 3.2s ease-in-out infinite; transform-origin:bottom center; }
+@keyframes monoSalta{ 0%,100%{ transform:translateY(0) } 50%{ transform:translateY(-10px) } }
+#monoBrazo{ transform-box:view-box; transform-origin:64px 150px; animation:saluda 1.3s ease-in-out infinite; }
+@keyframes saluda{ 0%,100%{ transform:rotate(-6deg) } 50%{ transform:rotate(-40deg) } }
+#monoCola{ transform-box:view-box; transform-origin:150px 205px; animation:colea 2.6s ease-in-out infinite alternate; }
+@keyframes colea{ from{ transform:rotate(-7deg) } to{ transform:rotate(9deg) } }
+#monoParpados{ animation:pestanea 4.5s infinite; transform-box:view-box; transform-origin:center 98px; }
+@keyframes pestanea{ 0%,94%,100%{ transform:scaleY(0) } 96%,98%{ transform:scaleY(1) } }
+.bocadillo{
+  position:absolute; left:90%; bottom:50%;
+  width:max-content; max-width:55vw;
+  background:#fffdf4; color:#3a2408; border-radius:14px;
+  padding:9px 13px; font-size:clamp(.75rem,3.8vw,.95rem); font-weight:600;
+  line-height:1.3; box-shadow:0 8px 22px rgba(0,0,0,.6);
+  opacity:0; transform:scale(.6); transform-origin:bottom left;
+  animation:bocadilloIn .6s cubic-bezier(.34,1.56,.64,1) 1.6s forwards;
+}
+.bocadillo:after{ content:''; position:absolute; left:-8px; bottom:12px; border:8px solid transparent; border-right-color:#fffdf4; }
+@keyframes bocadilloIn{ to{ opacity:1; transform:scale(1) } }
+
+/* =====================================================================
+   ESCENA 4 · EL ÁRBOL DE GIRASOLES
+   ===================================================================== */
+#sc4{ background:#f7ece1; justify-content:flex-end; padding:0; }
+#sc4 .suelo{ position:absolute; bottom:8vh; left:0; width:100%; height:2px; background:#3a2408; opacity:.75; z-index:4; }
+.tree-stage{ position:absolute; inset:0; display:flex; align-items:flex-end; justify-content:center; z-index:3; }
+#treeSvg{ width:100%; height:92%; }
+#treeSvg .rama{ fill:none; stroke:#7b4a22; stroke-linecap:round; }
+.fl-pop{ transform-box:fill-box; transform-origin:center; transform:scale(0); opacity:0; animation:flPop .9s cubic-bezier(.34,1.56,.64,1) forwards; }
+@keyframes flPop{ to{ transform:scale(var(--s)) rotate(var(--r)); opacity:1 } }
+.petalo-cae{ position:absolute; font-size:clamp(10px,3vw,16px); color:var(--sol); z-index:6; pointer-events:none; animation:caePetalo linear infinite; opacity:0; }
+@keyframes caePetalo{
+  0%{ transform:translateY(0) rotate(0) ; opacity:0 }
+  10%{ opacity:1 }
+  100%{ transform:translateY(60vh) translateX(14vw) rotate(540deg); opacity:0 }
+}
+.tree-panel{
+  position:absolute; top:calc(6vh + var(--safe-t)); left:6vw;
+  width:min(84vw,380px); z-index:9; color:#4a3419;
+  opacity:0; transform:translateX(-24px); transition:all 1.4s ease;
+}
+.tree-panel.show{ opacity:1; transform:translateX(0); }
+.tp-title{ font-family:var(--f-mano); font-weight:700; font-size:clamp(1.2rem,5.5vw,1.7rem); color:#8a5a12; line-height:1.25; }
+.tp-line{ white-space:pre-line; font-size:clamp(.85rem,3.8vw,1.05rem); line-height:1.5; margin-top:10px; }
+.tp-firma{ font-family:var(--f-mano); font-weight:700; font-size:clamp(1.05rem,4.6vw,1.4rem); margin-top:10px; color:#b8460e; }
+
+/* =====================================================================
+   ESCENA 5 · FUEGOS ARTIFICIALES DE CORAZONES
+   ===================================================================== */
+#sc5{ background:#000; justify-content:flex-start; padding:0; }
+#fwCanvas{ position:absolute; inset:0; width:100%; height:100%; z-index:2; }
+.neon{
+  position:absolute; top:calc(16vh + var(--safe-t)); left:0; right:0;
+  padding:0 7vw; text-align:center; z-index:5;
+  font-family:var(--f-mano); font-weight:700; line-height:1.3;
+  font-size:clamp(1.5rem,7vw,2.4rem); color:#ffdd80;
+  text-shadow:0 0 8px #ffb703, 0 0 20px #ff8800, 0 0 45px #ff6a00;
+  opacity:0; transition:opacity 2s ease;
+  animation:neonPulso 3.2s ease-in-out infinite;
+}
+.neon.show{ opacity:1; }
+@keyframes neonPulso{ 0%,100%{ filter:brightness(1) } 50%{ filter:brightness(1.25) } }
+.flota{ position:absolute; z-index:6; pointer-events:none; font-family:var(--f-elegante); font-size:clamp(1.1rem,5vw,1.7rem); color:#ffe9a8; text-shadow:0 0 12px rgba(255,180,0,.9); opacity:0; animation:flotaSube 6s ease-out forwards; }
+@keyframes flotaSube{ 0%{ opacity:0; transform:translateY(20px) scale(.7) } 20%{ opacity:1 } 80%{ opacity:1 } 100%{ opacity:0; transform:translateY(-90px) scale(1.15) } }
+.toque-hint{ position:absolute; bottom:calc(88px + var(--safe-b)); width:100%; text-align:center; font-size:.8rem; color:rgba(255,255,255,.45); z-index:6; }
+
+/* =====================================================================
+   ESCENA 6 · LA CARTA + MÚSICA
+   ===================================================================== */
+#sc6{
+  background:
+    radial-gradient(circle at 12% 8%, #f6f3c9 0%, rgba(246,243,201,0) 45%),
+    radial-gradient(circle at 88% 30%, #d8ecc8 0%, rgba(216,236,200,0) 50%),
+    linear-gradient(170deg,#eef7df 0%,#f7f3d8 45%,#e7f0d8 100%);
+  color:#4a4023; padding-top:calc(2vh + var(--safe-t)); padding-bottom:120px; gap:0;
+}
+.guirnalda{ position:absolute; top:0; left:0; width:100%; height:80px; z-index:1; pointer-events:none; }
+.guirnalda .foco{ animation:focoBrilla 3s ease-in-out infinite; transform-box:fill-box; transform-origin:center; }
+@keyframes focoBrilla{ 0%,100%{ opacity:.55 } 50%{ opacity:1 } }
+.player{
+  position:relative; z-index:6; margin-top:52px;
+  width:min(86vw,420px);
+  display:flex; align-items:center; gap:10px;
+  background:linear-gradient(90deg,#ffd84d,#ffc93c);
+  border-radius:12px; padding:8px 12px;
+  box-shadow:0 10px 26px rgba(120,90,0,.25);
+}
+.pl-art{ width:44px; height:44px; border-radius:8px; flex:0 0 44px; display:flex; align-items:center; justify-content:center; font-size:26px; background:linear-gradient(140deg,#7ec4ff,#bfe8a0); }
+.pl-info{ flex:1; min-width:0; }
+.pl-info b{ display:block; font-size:.92rem; color:#4a3300; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; letter-spacing:.4px; }
+.pl-info span{ display:block; font-size:.72rem; color:#8a6a10; }
+.pl-bar{ height:4px; background:rgba(0,0,0,.14); border-radius:4px; margin-top:5px; overflow:hidden; }
+.pl-bar i{ display:block; height:100%; width:0%; background:#8a3f00; }
+#plBtn{ width:38px; height:38px; flex:0 0 38px; border-radius:50%; border:none; background:#8a3f00; color:#ffe9a8; font-size:15px; cursor:pointer; }
+#sc6 .next-wrap{ position:fixed; }
+.pl-hint{ z-index:6; font-size:.74rem; font-style:italic; color:#7d7048; margin-top:7px; }
+.carta-intro{ white-space:pre-line; z-index:6; margin-top:16px; padding:0 7vw; text-align:center; font-family:var(--f-mano); font-weight:700; font-size:clamp(1.15rem,5.4vw,1.55rem); color:#5a4a1e; line-height:1.35; }
+.sobre-stage{ position:relative; z-index:5; width:min(85vw,380px); margin-top:16px; display:flex; flex-direction:column; align-items:center; }
+.sobre{ position:relative; width:100%; aspect-ratio:3/2; }
+.sobre svg{ width:100%; height:100%; display:block; filter:drop-shadow(0 14px 26px rgba(110,90,40,.25)); }
+#solapa{ transform-box:view-box; transform-origin:150px 40px; transition:transform 1.2s ease; }
+.sobre.abierto #solapa{ transform:rotateX(180deg); }
+.carta-papel{
+  position:relative; z-index:7; width:92%; margin-top:-26%;
+  background:linear-gradient(160deg,#fffaf0,#f6ecd6);
+  border-radius:10px; 
+  padding:15px 15px 45px 15px; /* <-- Más espacio en la parte de abajo */
+  box-shadow:0 18px 34px rgba(110,90,40,.3);
+  transform:translateY(40px) rotate(-1.4deg) scale(.9); opacity:0;
+  transition:all 1.3s cubic-bezier(.2,.8,.2,1);
+  border:1px solid rgba(160,130,60,.25);
+}
+.carta-papel.show{ transform:translateY(0) rotate(-1.4deg) scale(1); opacity:1; }
+#cartaTexto{ font-family:var(--f-mano); font-weight:500; font-size:clamp(0.92rem,4vw,1.1rem); line-height:1.45; color:#453718; min-height:8em; white-space:pre-wrap; }
+#cartaTexto .cursor{ border-right:2px solid #b8460e; animation:cursorParpadea .7s steps(1) infinite; }
+@keyframes cursorParpadea{ 50%{ border-color:transparent } }
+.carta-firma{ 
+  font-family:var(--f-elegante); font-size:clamp(1.3rem,5.5vw,1.7rem); 
+  color:#b8460e; text-align:right; margin-top:8px; 
+  margin-right:25px; /* <-- Empuja la firma hacia la izquierda para alejarla de la flor */
+  opacity:0; transition:opacity 1.2s; 
+}
+.carta-firma.show{ opacity:1; }
+.ramo-mini{ 
+  position:absolute; 
+  right:-8%; /* <-- Mueve el ramo hacia la derecha (afuera de la carta) */
+  bottom:-12%; /* <-- Baja el ramo un poco más */
+  width:26%; max-width:85px; /* <-- Evita que se vuelva gigante en celulares chicos */
+  z-index:8; pointer-events:none; filter:drop-shadow(0 8px 12px rgba(110,90,40,.35)); 
+}
+.carta-foot{ 
+  white-space:pre-line; z-index:6; 
+  margin-top:65px; /* <-- Aumentado bastante para que el ramo no lo toque */
+  margin-bottom:100px; 
+  padding:0 8vw; text-align:center; 
+  font-family:var(--f-mano); font-weight:700; font-size:clamp(1rem,4.6vw,1.3rem); 
+  color:#5a4a1e; line-height:1.45; 
+}
+
+.petalo-aire{ position:absolute; z-index:4; font-size:clamp(11px,3.4vw,18px); pointer-events:none; animation:aire linear infinite; opacity:.85; }
+@keyframes aire{
+  0%{ transform:translate(0,-10vh) rotate(0) }
+  100%{ transform:translate(18vw,110vh) rotate(420deg) }
+}
+
+/* =====================================================================
+   ESCENA 7 · LAS RAZONES
+   ===================================================================== */
+#sc7{
+  background:linear-gradient(180deg,#bfe4ff 0%,#dff0ff 42%,#e9f7d9 58%,#b9dd8e 100%);
+  color:#2f4a22; justify-content:flex-start; padding-top:calc(4vh + var(--safe-t));
+}
+#sc7 .nube{ position:absolute; border-radius:50%; background:rgba(255,255,255,.75); filter:blur(2px); z-index:1; }
+#sc7 .rama-deco{ position:absolute; font-size:clamp(28px,9vw,54px); z-index:2; opacity:.85; }
+.razones-title{ position:relative; z-index:6; text-align:center; line-height:.95; }
+.razones-title b{ display:block; font-family:var(--f-elegante); font-size:clamp(2.4rem,11vw,3.6rem); color:#2f5d34; text-shadow:0 2px 6px rgba(255,255,255,.8); font-weight:400; }
+.razones-title span{ display:block; font-family:var(--f-mano); font-weight:700; font-size:clamp(1.05rem,4.6vw,1.4rem); color:#4a7a3f; margin-top:-2px; }
+.razon-flower{
+  position:absolute; top:52%; left:50%; transform:translate(-50%,-50%);
+  width:min(52vw,280px); height:min(52vw,280px); z-index:3;
+  filter:drop-shadow(0 12px 22px rgba(60,80,30,.35));
+}
+.razon-flower svg{ width:100%; height:100%; animation:giraReloj 42s linear infinite; }
+@keyframes giraReloj{ from{ transform:rotate(0) } to{ transform:rotate(360deg) } }
+#razonesWrap{ position:absolute; inset:0; z-index:5; pointer-events:none; }
+.razon{
+  position:absolute; width:40%; max-width:210px;
+  font-family:var(--f-mano); font-weight:700;
+  font-size:clamp(.78rem,3.5vw,1.05rem); line-height:1.25;
+  color:#2c4a1f; text-shadow:0 1px 3px rgba(255,255,255,.95);
+  opacity:0; transform:scale(.85); transition:all .9s cubic-bezier(.34,1.56,.64,1);
+}
+.razon.show{ opacity:1; transform:scale(1); }
+
+/* =====================================================================
+   ESCENA 8 · LOS PÉTALOS CON MENSAJES
+   ===================================================================== */
+#sc8{
+  background:#fdf8ec;
+  background-image:radial-gradient(rgba(200,170,110,.22) 1px, transparent 1px);
+  background-size:14px 14px;
+  color:#8a1c3b; justify-content:flex-start; padding-top:calc(3vh + var(--safe-t));
+}
+.petalos-title{ position:relative; z-index:6; text-align:center; padding:0 6vw; font-family:var(--f-mano); font-weight:700; font-size:clamp(1.3rem,6.2vw,2rem); color:#8a1c3b; }
+.corazones-bg{ position:absolute; inset:0; z-index:1; pointer-events:none; overflow:hidden; }
+.mini-corazon{ position:absolute; font-size:clamp(10px,3vw,18px); opacity:.5; animation:sube linear infinite; }
+@keyframes sube{ 0%{ transform:translateY(105%) } 100%{ transform:translateY(-110%) } }
+.flower-stage{ 
+  position:relative; 
+  z-index:4; 
+  width:min(78vw,330px); 
+  height:min(78vw,330px); 
+  margin: auto 0; /* <-- Esto empuja la flor automáticamente al centro vertical de la pantalla */
+  display:flex; 
+  align-items:center; 
+  justify-content:center; 
+}
+.flower-stage .halo{ position:absolute; width:100%; height:100%; border-radius:50%; background:radial-gradient(circle,#fdeee0 0%,rgba(253,238,224,0) 70%); }
+#petalFlower{ position:relative; width:100%; height:100%; }
+.petalo-slot{
+  position:absolute; top:50%; left:50%;
+  width:23%; height:31%; margin:-15.5% 0 0 -11.5%;
+  z-index:4;
+}
+.petalo-btn{
+  width:100%; height:100%; display:block;
+  border:none; padding:0; cursor:pointer;
+  background:linear-gradient(180deg,#ffe271,#f2b705);
+  border-radius:50% 50% 50% 50%/62% 62% 38% 38%;
+  box-shadow:inset 0 -7px 12px rgba(170,110,0,.28);
+  transition:filter .2s ease, transform 2.6s cubic-bezier(.35,0,.65,1), opacity 2.6s ease;
+}
+.petalo-btn:active{ filter:brightness(1.15); }
+.petalo-btn:focus-visible{ outline:3px solid #8a5a12; outline-offset:2px; }
+.flor-centro{
+  position:absolute; top:50%; left:50%; width:30%; height:30%; margin:-15% 0 0 -15%;
+  border-radius:50%; background:radial-gradient(circle at 36% 32%,#a9702f,#6b3d10 70%);
+  box-shadow:inset 0 -6px 12px rgba(0,0,0,.35); z-index:5;
+}
+.flor-tallo{ position:absolute; top:62%; left:calc(50% - 5px); width:10px; height:40%; background:linear-gradient(90deg,#3f8f3f,#66bb5a,#3f8f3f); border-radius:6px; z-index:2; }
+.flor-hoja{ position:absolute; width:26%; height:13%; background:linear-gradient(45deg,#3f8f3f,#7cc36a); z-index:3; }
+.flor-hoja.h1{ top:76%; left:26%; border-radius:0 100% 0 100%; transform:rotate(-14deg); }
+.flor-hoja.h2{ top:87%; left:50%; border-radius:100% 0 100% 0; transform:rotate(14deg); }
+#burbujas{ position:absolute; inset:0; z-index:8; pointer-events:none; }
+.burbuja{
+  position:absolute; max-width:44vw;
+  background:#fffdf4; color:#5a3a12; border:1px solid #f0dfae;
+  border-radius:14px; padding:8px 12px;
+  font-family:var(--f-mano); font-weight:700; font-size:clamp(.8rem,3.6vw,1rem); line-height:1.25;
+  box-shadow:0 8px 18px rgba(140,110,40,.18);
+  opacity:0; transform:scale(.6);
+  animation:burbujaVida 6s ease forwards;
+}
+@keyframes burbujaVida{
+  0%{ opacity:0; transform:scale(.6) translateY(10px) }
+  12%{ opacity:1; transform:scale(1) translateY(0) }
+  80%{ opacity:1; transform:scale(1) translateY(-14px) }
+  100%{ opacity:0; transform:scale(.95) translateY(-26px) }
+}
+.hint-petalos{
+  position:absolute; bottom:calc(15vh + var(--safe-b)); left:50%; transform:translateX(-50%);
+  z-index:6; width:85%; max-width:340px; margin:0;
+  background:#fffdf4; border:2px solid #f0d98a; border-radius:30px;
+  padding:9px 18px; font-family:var(--f-mano); font-weight:700;
+  font-size:clamp(.82rem,3.8vw,1rem); color:#8a5a12; text-align:center;
+  box-shadow:0 6px 16px rgba(140,110,40,.15);
+}
+.modal{
+  position:absolute; inset:0; z-index:90; display:flex; align-items:center; justify-content:center;
+  background:rgba(60,40,10,.45); backdrop-filter:blur(3px);
+  opacity:0; visibility:hidden; transition:opacity .5s;
+}
+.modal.show{ opacity:1; visibility:visible; }
+.modal-card{
+  position:relative; width:min(82vw,340px);
+  background:#fffdf4; border:2px solid #f0d98a; border-radius:16px; padding:16px;
+  box-shadow:0 22px 50px rgba(0,0,0,.35);
+  transform:scale(.8); transition:transform .5s cubic-bezier(.34,1.56,.64,1);
+  text-align:center;
+}
+.modal.show .modal-card{ transform:scale(1); }
+.modal-card .foto{ width:100%; aspect-ratio:4/3; border-radius:10px; overflow:hidden; background:#241041; }
+.modal-card .foto img{ width:100%; height:100%; object-fit:cover; display:block; }
+.modal-card p{ font-family:var(--f-mano); font-weight:700; font-size:clamp(1.05rem,4.8vw,1.35rem); color:#8a1c3b; margin-top:12px; }
+.modal-x{ position:absolute; top:-14px; right:-14px; width:34px; height:34px; border-radius:50%; border:2px solid #f0d98a; background:#fffdf4; color:#8a5a12; font-size:17px; cursor:pointer; }
+
+/* =====================================================================
+   ESCENA 9 · LA FLOR GALAXIA
+   ===================================================================== */
+#sc9{ background:#000; justify-content:flex-start; padding:0; cursor:pointer; }
+#galaxiaCanvas{ position:absolute; inset:0; width:100%; height:100%; z-index:2; }
+.galaxia-texto{
+  white-space:pre-line;
+  position:absolute; top:calc(11vh + var(--safe-t)); left:0; right:0; padding:0 8vw;
+  text-align:center; z-index:6;
+  font-family:var(--f-elegante); font-size:clamp(1.6rem,8vw,2.6rem); line-height:1.15;
+  color:#ffe9a8; text-shadow:0 0 16px rgba(255,190,50,.8);
+  opacity:0; transition:opacity 2.5s ease;
+}
+.galaxia-texto.show{ opacity:1; }
+.galaxia-sub{
+  position:absolute; bottom:calc(92px + var(--safe-b)); left:0; right:0; padding:0 10vw;
+  text-align:center; z-index:6; font-size:clamp(.78rem,3.4vw,.95rem);
+  color:rgba(255,233,168,.6); opacity:0; transition:opacity 2s ease 1.5s;
+}
+.galaxia-sub.show{ opacity:1; }
+
+/* =====================================================================
+   ESCENA 10 · LA LÁMPARA
+   ===================================================================== */
+#sc10{ background:radial-gradient(circle at 50% 46%, #23304a 0%, #101728 42%, #060a13 100%); justify-content:flex-start; padding-top:calc(7vh + var(--safe-t)); }
+.lampara-title{
+  position:relative; z-index:6; text-align:center; padding:0 6vw;
+  font-family:var(--f-mano); font-weight:700; line-height:1.05;
+  font-size:clamp(2rem,9.5vw,3rem); color:#ffdf8a;
+  text-shadow:0 0 10px rgba(255,201,60,.85), 0 0 30px rgba(255,160,0,.55);
+}
+.lampara-title small{ display:block; font-size:.62em; }
+.cupula{ position:relative; z-index:5; width:min(66vw,290px); margin-top:4vh; }
+.cupula svg{ width:100%; height:auto; display:block; }
+#rosaLuz{ transform-box:view-box; transform-origin:center 170px; animation:rosaFlota 5s ease-in-out infinite alternate; }
+@keyframes rosaFlota{ from{ transform:translateY(0) rotate(-2deg) } to{ transform:translateY(-8px) rotate(2deg) } }
+#vidrioGlow{ animation:vidrioBrilla 4.5s ease-in-out infinite alternate; }
+@keyframes vidrioBrilla{ from{ opacity:.35 } to{ opacity:.8 } }
+.luciernaga{ position:absolute; width:5px; height:5px; border-radius:50%; background:#ffdf8a; box-shadow:0 0 10px 3px rgba(255,201,60,.85); z-index:7; animation:luciernagaVuela linear infinite; opacity:0; }
+@keyframes luciernagaVuela{
+  0%{ opacity:0; transform:translate(0,0) }
+  20%{ opacity:1 } 80%{ opacity:1 }
+  100%{ opacity:0; transform:translate(var(--lx),var(--ly)) }
+}
+.btn-luz{
+  position:relative; z-index:8; margin-top:5vh;
+  background:transparent; color:#ffdf8a;
+  border:2px solid rgba(255,201,60,.65); border-radius:40px;
+  padding:12px 30px; font-family:var(--f-mano); font-weight:700;
+  font-size:clamp(1.1rem,5vw,1.4rem); cursor:pointer;
+  box-shadow:0 0 18px rgba(255,201,60,.35), inset 0 0 18px rgba(255,201,60,.18);
+}
+#sc10.encendida .cupula{ filter:drop-shadow(0 0 40px rgba(255,201,60,.6)); }
+#sc10.encendida{ background:radial-gradient(circle at 50% 46%, #3c4260 0%, #161e33 45%, #060a13 100%); }
+
+/* =====================================================================
+   ESCENA 11 · PARA LA NIÑA MÁS BONITA
+   ===================================================================== */
+#sc11{ background:#000; justify-content:flex-start; padding-top:calc(6vh + var(--safe-t)); }
+.bonita-title{
+  position:relative; z-index:6; text-align:center; padding:0 6vw;
+  font-size:clamp(1.3rem,6.4vw,2rem); font-weight:400; color:#fff; letter-spacing:.5px;
+  opacity:0; transform:translateY(-12px); transition:all 1.4s ease;
+}
+.bonita-title.show{ opacity:1; transform:translateY(0); }
+.bonita-flor{ position:relative; z-index:5; width:min(88vw,420px); margin-top:1vh; }
+.bonita-flor svg{ width:100%; height:auto; display:block; }
+.bonita-flor path, .bonita-flor circle, .bonita-flor line{ vector-effect:non-scaling-stroke; }
+.linea-dibujo{ stroke-dasharray:var(--l); stroke-dashoffset:var(--l); animation:dibuja 2.2s ease forwards; }
+@keyframes dibuja{ to{ stroke-dashoffset:0 } }
+.bonita-firma{
+  position:absolute; bottom:calc(16vh + var(--safe-b)); left:0; right:0; text-align:center; z-index:7;
+  font-size:clamp(1.15rem,5.6vw,1.6rem); color:#fff;
+  opacity:0; transition:opacity 1.6s ease;
+}
+.bonita-firma.show{ opacity:1; }
+.estrella-brilla{ position:absolute; color:#fff; z-index:3; animation:titila ease-in-out infinite alternate; }
+@keyframes titila{ from{ opacity:.25; transform:scale(.8) } to{ opacity:1; transform:scale(1.15) } }
+
+
+.final-btns{ display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:18px; }
+.final-btns .btn{ padding:11px 24px; font-size:.95rem; }
+.lluvia{ position:absolute; top:-10vh; font-size:clamp(14px,4vw,22px); z-index:4; pointer-events:none; animation:cae linear infinite; }
+@keyframes cae{ 0%{ transform:translateY(0) rotate(0); opacity:0 } 10%{ opacity:1 } 100%{ transform:translateY(120vh) rotate(420deg); opacity:.2 } }
+
+@media (prefers-reduced-motion: reduce){
+  .particula,.mariposa,.flower-svg,.mono-svg,.regalo,.portal-flor{ animation:none !important; }
+}
+
+/* Botón de la Escena 4 a un costado para que no tape el tronco */
+#sc4 .next-wrap {
+  justify-content: flex-end;
+  padding-right: 6vw;
+}
+/* =====================================================================
+   ESCENA 12 · LA SORPRESA FINAL (DEFINITIVA Y ORDENADA)
+   ===================================================================== */
+#sc12 {
+  background: radial-gradient(circle at 50% 50%, #241041 0%, #120821 60%, #05030c 100%);
+  justify-content: space-between !important;
+  padding: calc(3vh + var(--safe-t)) 4vw calc(3vh + var(--safe-b)) 4vw !important;
+  overflow: hidden;
+}
+
+#nombreCanvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.regalo-wrap {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  z-index: 20; transition: opacity .8s ease, transform .8s ease;
+  background: radial-gradient(circle at 50% 60%, #241041 0%, #120821 50%, #05030c 100%);
+}
+.regalo { width: min(52vw, 230px); cursor: pointer; animation: regaloTiembla 2.4s ease-in-out infinite; transform-origin: bottom center; }
+.regalo svg { width: 100%; height: auto; display: block; filter: drop-shadow(0 16px 30px rgba(0,0,0,.6)); }
+.regalo-txt { margin-top: 22px; font-family: var(--f-mano); font-weight: 700; font-size: clamp(1.15rem,5.4vw,1.6rem); color: #ffdf8a; text-shadow: 0 0 14px rgba(255,201,60,.7); }
+
+/* ---- Vibración del regalo en bucle (vibra y para) ---- */
+@keyframes regaloTiembla {
+  0%    { transform: translateX(0) rotate(0deg); }
+  2%    { transform: translateX(-4px) rotate(-4deg); }
+  4%    { transform: translateX(4px) rotate(4deg); }
+  6%    { transform: translateX(-4px) rotate(-3deg); }
+  8%    { transform: translateX(4px) rotate(3deg); }
+  10%   { transform: translateX(-3px) rotate(-2deg); }
+  12%   { transform: translateX(3px) rotate(2deg); }
+  14%   { transform: translateX(0) rotate(0deg); }
+  100%  { transform: translateX(0) rotate(0deg); }
+}
+   
+/* Contenedor general de la sorpresa abierta */
+.contenido-final-doris {
+  position: relative;
+  z-index: 6;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  opacity: 0; pointer-events: none;
+  transition: opacity 1.2s ease;
+}
+
+/* Espacio superior para las partículas del nombre */
+.titulo-particulas-box {
+  position: relative;
+  width: 100%;
+  height: 22vh;
+  min-height: 110px;
+  flex-shrink: 0;
+}
+
+/* Dos fotos cuadradas (1:1) al centro */
+.fotos-container {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 360px;
+  z-index: 10;
+  margin: auto 0;
+  padding: 0 12px;
+}
+
+.foto-card-final {
+  width: 42vw;
+  max-width: 165px; /* Tamaño intermedio perfecto y adaptable */
+  aspect-ratio: 1 / 1;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 2px solid rgba(255,255,255,0.85);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+  cursor: pointer;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  transform: scale(0.95);
+  flex-shrink: 0;
+}
+
+
+.foto-card-final.nitida {
+  transform: scale(1.03);
+  box-shadow: 0 15px 35px rgba(255,201,60,0.4);
+  border-color: var(--sol);
+}
+
+
+.foto-card-final img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: blur(14px) brightness(0.65);
+  transition: filter 0.6s ease;
+}
+
+.foto-card-final.nitida img {
+  filter: blur(0px) brightness(1);
+}
+
+
+/* Mensaje y firma central */
+.final-msg-box {
+  text-align: center;
+  z-index: 10;
+  padding: 0 2vw;
+  margin-top: -3vh; /* Sube aún más el bloque de texto */
+  margin-bottom: 1.5vh;
+}
+
+.final-msg-box p {
+  white-space: pre-line;
+  font-family: var(--f-mano);
+  font-weight: 700;
+  font-size: clamp(1.2rem, 5vw, 1.45rem);
+  line-height: 1.4;
+  color: #ffe9c9;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+}
+.final-msg-box .firma {
+  font-family: var(--f-elegante);
+  font-size: clamp(1.7rem, 7vw, 2.3rem);
+  color: #ffc93c;
+  margin-top: 4px;
+}
+
+/* Botones en una SOLA FILA (horizontal) abajo */
+.final-btns-linea {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  z-index: 10;
+  flex-shrink: 0;
+  margin-bottom: 2vh; /* Eleva los botones ligeramente del borde inferior */
+}
+
+.final-btns-linea .btn {
+  padding: 10px 18px;
+  font-size: clamp(0.82rem, 3.5vw, 0.98rem);
+  white-space: nowrap;
+}
+/* ---- Botón revelar foto (vibración) ---- */
+.foto-card-final { position: relative; }
+
+.foto-reveal-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  border: none;
+  cursor: pointer;
+  padding: 9px 14px;
+  border-radius: 40px;
+  font-family: var(--f-texto);
+  font-weight: 700;
+  font-size: clamp(0.6rem, 2.8vw, 0.8rem);
+  color: #3a2408;
+  background: linear-gradient(45deg, #e8a91d, var(--sol));
+  box-shadow: 0 6px 18px rgba(255,201,60,.55);
+  white-space: nowrap;
+  animation: vibrarBtn 0.5s linear infinite;
+}
+
+@keyframes vibrarBtn {
+  0%, 100% { transform: translate(-50%, -50%) rotate(0deg); }
+  20% { transform: translate(calc(-50% - 2px), -50%) rotate(-3deg); }
+  40% { transform: translate(calc(-50% + 2px), -50%) rotate(3deg); }
+  60% { transform: translate(calc(-50% - 2px), -50%) rotate(-2deg); }
+  80% { transform: translate(calc(-50% + 2px), -50%) rotate(2deg); }
+}
+
+.foto-card-final.nitida .foto-reveal-btn {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .5s ease;
+}
+
+/* ---- Mensaje entre el nombre y las fotos ---- */
+.mensaje-materializar {
+  z-index: 10;
+  max-width: 92%;
+  margin: 0 auto;
+  padding: 10px 16px;
+  text-align: center;
+  font-family: var(--f-mano);
+  font-weight: 700;
+  font-size: clamp(0.95rem, 4vw, 1.2rem);
+  line-height: 1.4;
+  color: #ffe9c9;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.55);
+  background: rgba(255,201,60,0.08);
+  border: 1px solid rgba(255,201,60,0.25);
+  border-radius: 16px;
+}
+
+/* ================= PANTALLA DE SEGURIDAD ================= */
+#lockScreen {
+
+  position: fixed; inset: 0; z-index: 9999;
+  display: flex; align-items: center; justify-content: center;
+  background: radial-gradient(circle at center, #3b185f 0%, #1a0b2e 70%, #0d0518 100%);
+  padding: 6vw;
+}
+#lockScreen.oculto { display: none; }
+
+.lock-card {
+  width: min(90vw, 380px);
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,201,60,0.3);
+  border-radius: 24px;
+  padding: 32px 24px;
+  text-align: center;
+  box-shadow: 0 18px 45px rgba(0,0,0,0.55);
+  backdrop-filter: blur(6px);
+}
+.lock-emoji { font-size: 46px; margin-bottom: 10px; }
+.lock-title {
+  font-family: var(--f-mano); font-weight: 700;
+  font-size: clamp(1.4rem, 6vw, 1.9rem);
+  color: #ffe27a; margin-bottom: 18px;
+  text-shadow: 0 0 14px rgba(255,201,60,0.5);
+}
+.lock-input {
+  width: 100%; height: 50px;
+  border: 2px solid rgba(255,201,60,0.4);
+  border-radius: 40px;
+  background: rgba(0,0,0,0.35);
+  color: #fff; text-align: center;
+  font-size: 1.2rem; font-family: var(--f-texto);
+  outline: none; margin-bottom: 16px;
+}
+.lock-input:focus { border-color: var(--sol); }
+.lock-btn {
+  padding: 13px 30px; border: none; border-radius: 40px;
+  font-family: var(--f-texto); font-weight: 700;
+  font-size: 1.05rem; cursor: pointer;
+  color: #3a2408;
+  background: linear-gradient(45deg, #e8a91d, var(--sol));
+  box-shadow: 0 8px 22px rgba(255,201,60,0.45);
+}
+.lock-btn:active { transform: scale(.96); }
+.lock-error {
+  margin-top: 14px; min-height: 20px;
+  color: #ff8080; font-weight: 600;
+  font-size: .95rem;
+}
+
+/* Overlay video error */
+#errorOverlay {
+  position: fixed; inset: 0; z-index: 10000;
+  display: none;
+  flex-direction: column; align-items: center; justify-content: center;
+  gap: 20px; background: #000; padding: 5vw;
+}
+#errorOverlay.activo { display: flex; }
+#errorVideo {
+  width: min(92vw, 500px);
+  max-height: 65vh;
+  border-radius: 14px;
+  object-fit: contain;
+  box-shadow: 0 14px 40px rgba(0,0,0,0.7);
+}
+
+</style>
+</head>
+<body>
+   <!-- ================= PANTALLA DE SEGURIDAD ================= -->
+<div id="lockScreen">
+  <div class="lock-card">
+    <div class="lock-emoji">🌻</div>
+    <h2 class="lock-title">Ingrese la Palabra Mágica</h2>
+    <input type="text" id="lockInput" class="lock-input" placeholder="Palabra mágica..." autocomplete="off">
+    <button id="lockBtn" class="lock-btn">Ingresar ✨</button>
+    <p id="lockError" class="lock-error"></p>
+  </div>
+</div>
+
+<!-- Overlay del video de error -->
+<div id="errorOverlay">
+  <video id="errorVideo" playsinline loop>
+    <source src="error.mp4" type="video/mp4">
+  </video>
+  <button id="btnReintentar" class="lock-btn">Reintentar palabra mágica 🔁</button>
+</div>
+
+<div id="progreso"><i id="progresoBarra"></i></div>
+<div id="hud">
+  <button class="hud-btn" id="hudBack" aria-label="Escena anterior">‹</button>
+  <button class="hud-btn" id="hudMusic" aria-label="Música">♪</button>
+</div>
+
+
+<div id="app">
+
+  <!-- ================= 1 · INTRO ================= -->
+  <section class="scene active" id="sc1">
+    <div class="particles" id="parts1"></div>
+    <div class="intro-top">
+      <h1 class="intro-title" id="introTitle">Para una personita muy especial…</h1>
+      <h2 class="intro-name" id="introName">Doris</h2>
+    </div>
+    <div class="images-container">
+      <div class="photo-card" id="cardStitch"><img id="imgStitch" alt="Stitch"></div>
+      <div class="photo-card" id="cardFlores"><img id="imgFlores" alt="Ramo de flores"></div>
+    </div>
+    <div class="controls-wrapper">
+      <button id="btnCont1" class="btn btn-teal">Empezar aventura ✨</button>
+    </div>
+  </section>
+
+  <!-- ================= 2 · EL RAMO ================= -->
+  <section class="scene" id="sc2">
+    <div class="estrellas" id="estrellas2"></div>
+    <h1 class="ramo-title" id="ramoTitle">Ten tu ramo, Doris</h1>
+    <div id="bouquetContainer"></div>
+    <div class="next-wrap"><button class="btn btn-teal" id="btnCont2">Sigue conmigo 🌻</button></div>
+  </section>
+
+  <!-- ================= 3 · PORTAL + MONITO ================= -->
+  <section class="scene" id="sc3">
+    <div class="halo-portal"></div>
+    <div class="portal-flor" id="portalFlor"></div>
+    <p class="portal-texto">Toca para iniciar</p>
+    <div class="mono-wrap">
+      <svg class="mono-svg" viewBox="0 0 220 270" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="pielMono" cx="40%" cy="30%" r="70%">
+            <stop offset="0%" stop-color="#8a5327"/><stop offset="100%" stop-color="#593212"/>
+          </radialGradient>
+          <radialGradient id="caraMono" cx="50%" cy="40%" r="60%">
+            <stop offset="0%" stop-color="#ffe6cc"/><stop offset="100%" stop-color="#e3b488"/>
+          </radialGradient>
+        </defs>
+        <!-- cola -->
+        <path id="monoCola" d="M140 210 C 190 230 220 180 180 140" fill="none" stroke="#593212" stroke-width="12" stroke-linecap="round"/>
+        <!-- piernas -->
+        <path d="M 90 230 C 80 260 70 265 60 260 C 70 250 80 240 100 230 Z" fill="#593212"/>
+        <path d="M 130 230 C 140 260 150 265 160 260 C 150 250 140 240 120 230 Z" fill="#593212"/>
+        <!-- cuerpo -->
+        <path d="M 85 140 C 60 190 70 240 110 240 C 150 240 160 190 135 140 Z" fill="url(#pielMono)"/>
+        <path d="M 95 150 C 80 190 85 230 110 230 C 135 230 140 190 125 150 Z" fill="#ebc29a"/>
+        <!-- brazo derecho (con girasol) -->
+        <g>
+          <path d="M140 150 C 170 140 185 130 180 112" fill="none" stroke="#593212" stroke-width="14" stroke-linecap="round"/>
+          <circle cx="180" cy="104" r="11" fill="#784822"/>
+          <g transform="translate(180,96)">
+            <circle cx="0" cy="-14" r="3" fill="#ffd94a"/><circle cx="9" cy="-9" r="3" fill="#ffd94a"/>
+            <circle cx="11" cy="1" r="3" fill="#ffd94a"/><circle cx="6" cy="10" r="3" fill="#ffd94a"/>
+            <circle cx="-4" cy="11" r="3" fill="#ffd94a"/><circle cx="-11" cy="3" r="3" fill="#ffd94a"/>
+            <circle cx="-9" cy="-8" r="3" fill="#ffd94a"/><circle cx="0" cy="0" r="5" fill="#6b3d10"/>
+          </g>
+        </g>
+        <!-- brazo izquierdo que saluda -->
+        <g id="monoBrazo">
+          <path d="M80 150 C 50 140 35 130 40 112" fill="none" stroke="#593212" stroke-width="14" stroke-linecap="round"/>
+          <circle cx="39" cy="105" r="10" fill="#784822"/>
+        </g>
+        <!-- orejas -->
+        <path d="M 65 95 C 45 85 45 115 65 110 Z" fill="#593212"/>
+        <path d="M 62 98 C 50 92 50 108 62 105 Z" fill="#e3b488"/>
+        <path d="M 155 95 C 175 85 175 115 155 110 Z" fill="#593212"/>
+        <path d="M 158 98 C 170 92 170 108 158 105 Z" fill="#e3b488"/>
+        <!-- cabeza -->
+        <path d="M 75 90 C 70 60 150 60 145 90 C 155 120 130 140 110 140 C 90 140 65 120 75 90 Z" fill="url(#pielMono)"/>
+        <path d="M 82 95 C 75 75 145 75 138 95 C 148 115 125 130 110 130 C 95 130 72 115 82 95 Z" fill="url(#caraMono)"/>
+        <!-- ojos -->
+        <ellipse cx="96" cy="94" rx="10" ry="12" fill="#fff"/>
+        <ellipse cx="124" cy="94" rx="10" ry="12" fill="#fff"/>
+        <circle cx="98" cy="96" r="6" fill="#1a0f08"/><circle cx="126" cy="96" r="6" fill="#1a0f08"/>
+        <circle cx="99" cy="93" r="2.5" fill="#fff"/><circle cx="127" cy="93" r="2.5" fill="#fff"/>
+        <g id="monoParpados">
+          <path d="M 84 94 C 84 80 108 80 108 94 Z" fill="#c9915a"/>
+          <path d="M 112 94 C 112 80 136 80 136 94 Z" fill="#c9915a"/>
+        </g>
+        <!-- cejas expresivas -->
+        <path d="M84 76 Q 96 66 104 74" fill="none" stroke="#4a2608" stroke-width="4" stroke-linecap="round"/>
+        <path d="M116 74 Q 124 66 136 76" fill="none" stroke="#4a2608" stroke-width="4" stroke-linecap="round"/>
+        <!-- nariz y sonrisa -->
+        <ellipse cx="110" cy="112" rx="6" ry="4" fill="#c28c5f" opacity=".7"/>
+        <circle cx="106" cy="112" r="2.2" fill="#543314"/><circle cx="114" cy="112" r="2.2" fill="#543314"/>
+        <path d="M92 122 Q 110 138 128 122" fill="none" stroke="#543314" stroke-width="3.6" stroke-linecap="round"/>
+        <ellipse cx="80" cy="116" rx="9" ry="6" fill="#ff9aa2" opacity=".5"/>
+        <ellipse cx="140" cy="116" rx="9" ry="6" fill="#ff9aa2" opacity=".5"/>
+      </svg>
+      <div class="bocadillo" id="bocadilloMono">¡Hola, Doris! Toca la flor… 🌻</div>
+    </div>
+  </section>
+
+  <!-- ================= 4 · EL ÁRBOL ================= -->
+  <section class="scene" id="sc4">
+    <div class="tree-panel" id="treePanel">
+      <p class="tp-title" id="tpTitle">Flores amarillas para ti, Doris:</p>
+      <p class="tp-line" id="tpLine"></p>
+      <p class="tp-firma" id="tpFirma"></p>
+    </div>
+    <div class="tree-stage">
+      <svg id="treeSvg" viewBox="0 0 420 380" preserveAspectRatio="xMidYMax meet"></svg>
+    </div>
+    <div class="next-wrap"><button class="btn btn-sol" id="btnCont4">Mira el cielo ✨</button></div>
+  </section>
+
+  <!-- ================= 5 · FUEGOS DE CORAZONES ================= -->
+  <section class="scene" id="sc5">
+    <canvas id="fwCanvas"></canvas>
+    <h2 class="neon" id="fwText"></h2>
+    <div id="fwFlotantes"></div>
+    <p class="toque-hint">toca la pantalla para lanzar más 💛</p>
+    <div class="next-wrap"><button class="btn btn-sol" id="btnCont5">Tengo algo escrito 💌</button></div>
+  </section>
+
+  <!-- ================= 6 · LA CARTA ================= -->
+  <section class="scene scrollable" id="sc6">
+    <svg class="guirnalda" viewBox="0 0 400 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 14 Q 100 52 200 20 T 400 14" fill="none" stroke="#6d7a4a" stroke-width="1.6"/>
+      <g class="foco"><line x1="46" y1="34" x2="46" y2="44" stroke="#6d7a4a" stroke-width="1.4"/><circle cx="46" cy="50" r="7" fill="#ffd84d"/></g>
+      <g class="foco" style="animation-delay:.4s"><line x1="112" y1="43" x2="112" y2="53" stroke="#6d7a4a" stroke-width="1.4"/><circle cx="112" cy="59" r="7" fill="#ffd84d"/></g>
+      <g class="foco" style="animation-delay:.9s"><line x1="188" y1="40" x2="188" y2="50" stroke="#6d7a4a" stroke-width="1.4"/><circle cx="188" cy="56" r="7" fill="#ffd84d"/></g>
+      <g class="foco" style="animation-delay:1.3s"><line x1="266" y1="30" x2="266" y2="40" stroke="#6d7a4a" stroke-width="1.4"/><circle cx="266" cy="46" r="7" fill="#ffd84d"/></g>
+      <g class="foco" style="animation-delay:1.8s"><line x1="344" y1="22" x2="344" y2="32" stroke="#6d7a4a" stroke-width="1.4"/><circle cx="344" cy="38" r="7" fill="#ffd84d"/></g>
+    </svg>
+    <div class="player" id="player">
+      <div class="pl-art">🌻</div>
+      <div class="pl-info">
+        <b id="plTitle">Nuestra canción</b>
+        <span id="plArtist">Para Doris</span>
+        <div class="pl-bar"><i id="plFill"></i></div>
+      </div>
+      <button id="plBtn" aria-label="Reproducir">▶</button>
+    </div>
+    <p class="pl-hint">(Dale play y sube el volumen)</p>
+    <p class="carta-intro" id="cartaIntro"></p>
+    <div class="sobre-stage">
+      <div class="sobre" id="sobre">
+        <svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
+          <rect x="6" y="38" width="288" height="156" rx="10" fill="#f3f1ea"/>
+          <path d="M6 48 L150 140 L294 48 L294 40 Q294 32 284 32 L16 32 Q6 32 6 40 Z" fill="#e7e4da"/>
+          <g id="solapa"><path d="M6 44 L150 132 L294 44 L294 40 Q294 32 284 32 L16 32 Q6 32 6 40 Z" fill="#dcd8cc"/></g>
+        </svg>
+      </div>
+      <div class="carta-papel" id="cartaPapel">
+        <div id="cartaTexto"></div>
+        <div class="carta-firma" id="cartaFirma"></div>
+      </div>
+      <svg class="ramo-mini" viewBox="0 0 120 160" xmlns="http://www.w3.org/2000/svg" id="ramoMini"></svg>
+    </div>
+    <p class="carta-foot" id="cartaFoot"></p>
+    <div class="next-wrap"><button class="btn btn-sol" id="btnCont6">Mis razones 🌼</button></div>
+  </section>
+
+  <!-- ================= 7 · LAS RAZONES ================= -->
+  <section class="scene" id="sc7">
+    <div class="nube" style="width:40vw;height:12vw;top:8%;left:-6%"></div>
+    <div class="nube" style="width:30vw;height:9vw;top:16%;right:-4%"></div>
+    <div class="rama-deco" style="top:1%;left:-2%">🌸</div>
+    <div class="rama-deco" style="top:4%;right:2%">🌸</div>
+    <div class="rama-deco" style="bottom:3%;left:4%">🦋</div>
+    <div class="rama-deco" style="bottom:6%;right:5%">🌷</div>
+    <h2 class="razones-title"><b id="razTitulo">Razones</b><span id="razSub">por las que te quiero</span></h2>
+    <div class="razon-flower" id="razonFlower"></div>
+    <div id="razonesWrap"></div>
+    <div class="next-wrap"><button class="btn btn-sol" id="btnCont7">Toca mis pétalos 🌻</button></div>
+  </section>
+
+  <!-- ================= 8 · LOS PÉTALOS ================= -->
+  <section class="scene" id="sc8">
+    <div class="corazones-bg" id="corazonesBg"></div>
+    <h2 class="petalos-title" id="petalosTitulo">¡Feliz día de las flores amarillas!</h2>
+    <div class="flower-stage">
+      <div class="halo"></div>
+      <div id="petalFlower">
+        <div class="flor-tallo"></div>
+        <div class="flor-hoja h1"></div>
+        <div class="flor-hoja h2"></div>
+        <div class="flor-centro"></div>
+      </div>
+    </div>
+    <div id="burbujas"></div>
+    <p class="hint-petalos" id="hintPetalos">Toca los pétalos y descubre lo que siento por ti 🌻</p>
+    <div class="modal" id="petalModal">
+      <div class="modal-card">
+        <button class="modal-x" id="modalX" aria-label="Cerrar">✕</button>
+        <div class="foto"><img id="imgModal" alt="Ramo"></div>
+        <p id="modalTexto">Eres mi flor más especial 🌻</p>
+      </div>
+    </div>
+    <div class="next-wrap"><button class="btn btn-sol" id="btnCont8">Vamos al espacio 🚀</button></div>
+  </section>
+
+  <!-- ================= 9 · FLOR GALAXIA ================= -->
+  <section class="scene" id="sc9">
+    <canvas id="galaxiaCanvas"></canvas>
+    <h2 class="galaxia-texto" id="galaxiaTexto"></h2>
+    <p class="galaxia-sub" id="galaxiaSub">toca la pantalla para acelerar las estrellas</p>
+    <div class="next-wrap"><button class="btn btn-sol" id="btnCont9">Enciende la luz 💡</button></div>
+  </section>
+
+  <!-- ================= 10 · LA LÁMPARA ================= -->
+  <section class="scene" id="sc10">
+    <h2 class="lampara-title" id="lamparaTitulo">Flores amarillas<small>para ti</small></h2>
+    <div class="cupula" id="cupula">
+      <svg viewBox="0 0 220 300" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="vidrio" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="rgba(255,255,255,.28)"/>
+            <stop offset="45%" stop-color="rgba(255,255,255,.06)"/>
+            <stop offset="100%" stop-color="rgba(255,255,255,.18)"/>
+          </linearGradient>
+          <radialGradient id="luzRosa" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="rgba(255,213,90,.85)"/>
+            <stop offset="60%" stop-color="rgba(255,180,40,.28)"/>
+            <stop offset="100%" stop-color="rgba(255,180,40,0)"/>
+          </radialGradient>
+          <linearGradient id="madera" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#7a5230"/><stop offset="100%" stop-color="#41291a"/>
+          </linearGradient>
+        </defs>
+        <ellipse cx="110" cy="176" rx="82" ry="82" fill="url(#luzRosa)" id="vidrioGlow"/>
+        <g id="rosaLuz">
+          <path d="M110 232 C 110 205 110 190 110 176" stroke="#3f8f3f" stroke-width="5" fill="none" stroke-linecap="round"/>
+          <path d="M110 208 C 92 202 84 190 86 180 C 100 180 110 192 110 208 Z" fill="#3f8f3f"/>
+          <path d="M110 212 C 128 208 138 196 136 186 C 122 186 112 196 110 212 Z" fill="#4da34d"/>
+          <g transform="translate(110,158)">
+            <circle r="30" fill="#e8a91d" opacity=".35"/>
+            <path d="M-28 4 C -30 -16 -16 -30 0 -30 C 16 -30 30 -16 28 4 C 20 16 10 22 0 22 C -10 22 -20 16 -28 4 Z" fill="#ffd24a"/>
+            <path d="M-20 2 C -22 -12 -12 -22 0 -22 C 12 -22 22 -12 20 2 C 14 12 7 16 0 16 C -7 16 -14 12 -20 2 Z" fill="#ffe27a"/>
+            <path d="M-11 0 C -13 -9 -6 -14 0 -14 C 7 -14 13 -9 11 0 C 7 7 4 9 0 9 C -4 9 -8 7 -11 0 Z" fill="#fff0b0"/>
+            <path d="M-5 -2 C -6 -7 -2 -9 1 -8 C 5 -7 6 -3 4 0 C 2 3 -3 3 -5 -2 Z" fill="#fffae0"/>
+          </g>
+        </g>
+        <path d="M32 236 C 32 120 78 62 110 62 C 142 62 188 120 188 236 Z" fill="url(#vidrio)" stroke="rgba(255,255,255,.35)" stroke-width="1.6"/>
+        <circle cx="110" cy="56" r="8" fill="rgba(255,255,255,.45)"/>
+        <ellipse cx="110" cy="240" rx="88" ry="16" fill="url(#madera)"/>
+        <ellipse cx="110" cy="234" rx="88" ry="14" fill="#8a5f38"/>
+        <ellipse cx="110" cy="232" rx="70" ry="10" fill="#6b4525" opacity=".6"/>
+      </svg>
+    </div>
+    <button class="btn-luz" id="btnLuz">Toca la luz ✨</button>
+    <div class="next-wrap"><button class="btn btn-sol" id="btnCont10">Una flor más 🌻</button></div>
+  </section>
+
+  <!-- ================= 11 · PARA LA NIÑA MÁS BONITA ================= -->
+  <section class="scene" id="sc11">
+    <h2 class="bonita-title" id="bonitaTitulo">Para la niña más bonita</h2>
+    <div class="bonita-flor" id="bonitaFlor"></div>
+    <p class="bonita-firma" id="bonitaFirma"></p> <!-- ¡Esta es la línea que faltaba! -->
+    <div class="next-wrap"><button class="btn btn-sol" id="btnCont11">Falta una cosa… 🎁</button></div>
+  </section>
+
+
+  <!-- ================= 12 · LA SORPRESA ================= -->
+  <section class="scene" id="sc12">
+    <canvas id="nombreCanvas"></canvas>
+    
+    <!-- El regalo inicial -->
+    <div class="regalo-wrap" id="regaloWrap">
+      <div class="regalo" id="regalo">
+        <svg viewBox="0 0 220 210" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="cajaG" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#ffd24a"/><stop offset="100%" stop-color="#e08c0b"/>
+            </linearGradient>
+            <linearGradient id="tapaG" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#ffe27a"/><stop offset="100%" stop-color="#f0a81a"/>
+            </linearGradient>
+          </defs>
+          <rect x="34" y="82" width="152" height="112" rx="8" fill="url(#cajaG)"/>
+          <rect x="96" y="82" width="28" height="112" fill="#b8460e" opacity=".85"/>
+          <g id="tapaRegalo">
+            <rect x="22" y="54" width="176" height="38" rx="8" fill="url(#tapaG)"/>
+            <rect x="96" y="54" width="28" height="38" fill="#b8460e" opacity=".85"/>
+            <path d="M110 54 C 78 54 70 24 92 20 C 108 17 110 40 110 54 Z" fill="#c1520f"/>
+            <path d="M110 54 C 142 54 150 24 128 20 C 112 17 110 40 110 54 Z" fill="#d95f14"/>
+            <circle cx="110" cy="50" r="9" fill="#b8460e"/>
+          </g>
+        </svg>
+      </div>
+      <p class="regalo-txt" id="regaloTxt">Toca el regalo 🎁</p>
+    </div>
+
+    <!-- Contenido final organizado -->
+<div class="contenido-final-doris" id="contenidoFinalDoris">
+  <div class="titulo-particulas-box"></div>
+
+  <p class="mensaje-materializar">Sé que actualmente no existe una foto juntos, pero quise materializar un par que espero sean de tu agrado.</p>
+
+  <!-- Dos fotos cuadradas en el medio -->
+  <div class="fotos-container">
+
+  <div class="foto-card-final" id="foto1">
+    <img id="imgFoto1" alt="Recuerdo 1">
+    <button class="foto-reveal-btn" type="button">HAZ CLICK AQUÍ</button>
+  </div>
+  <div class="foto-card-final" id="foto2">
+    <img id="imgFoto2" alt="Recuerdo 2">
+    <button class="foto-reveal-btn" type="button">HAZ CLICK AQUÍ</button>
+  </div>
+</div>
+
+
+      <div class="final-msg-box">
+        <p id="finalTexto"></p>
+        <div class="firma" id="finalFirma"></div>
+      </div>
+
+      <!-- Botones en línea abajo -->
+      <div class="final-btns-linea">
+        <button class="btn btn-sol" id="btnOtraVez">Verlo otra vez 💛</button>
+        <button class="btn btn-teal" id="btnRepetirSorpresa">Repetir sorpresa ✨</button>
+      </div>
+    </div>
+  </section>
+
+
+<script>
+/* =====================================================================
+   1) CONFIGURACIÓN — cambia aquí los textos, nombres y archivos
+   ===================================================================== */
+const CFG = {
+  nombre: "Doris",
+  apodo: "",
+
+  /* --- archivos (deben estar en la MISMA carpeta que este .html) --- */
+  cancion: "cancion.mp3",
+  imgStitch: "jorge.jpg",
+  imgFlores: "flores.jpg",
+  imgFloress: "amarillas.jpeg",
+  celis: "celis.jpeg",
+  doris: "doris.jpeg",
+
+  cancionTitulo: "Para Ti",
+  cancionArtista: "Doris",
+
+  /* --- ESCENA 1 --- */
+  introTitulo: "Para una persona muy especial…",
+
+  /* --- ESCENA 2 --- */
+  tituloRamo: "Ten tu ramo, Doris",
+
+  /* --- ESCENA 4 (árbol) --- */
+  arbolTitulo: "Flores amarillas para ti, Doris:",
+  arbolTexto: "Espero te guste este presente virtual que fue hecho con mucha dedicación.\n\n Ninguno de los 2 nos buscamos pero al final coincidimos que es lo mas importante.",
+  arbolFirma: "--Con mucho cariño 🌻",
+
+  /* --- ESCENA 5 (fuegos) --- */
+  textoFuegos: "Flores amarillas para ti en este día",
+  palabrasFuegos: ["🌼", "Doris", "🌻", "Sonríe", "Me Importas", "Eres especial","🦋","🦋"],
+
+  /* --- ESCENA 6 (carta) --- */
+  cartaIntro: "Un presente que cruza kilómetros\npara llegar a ti.",
+  carta: "No soy tanto de detalles pero de alguna manera este presente ha nacido de forma espontánea.\n\n Y aunque a veces la distancia se sienta larga, tu sonrisa es algo que disfruto.",
+  cartaFirma: "Con mucho cariño",
+  cartaPie: "Aunque la distancia nos separe, te tengo presente,\nen los dias alejados.",
+
+  /* --- ESCENA 7 (razones) --- */
+  razonesTitulo: "Razones",
+  // razonesSub: "por las que te quiero",
+  razones: [
+    "Porque cada gesto tuyo habla por si solo.",
+    "Porque tu sonrisa es única.",
+    "Porque en tu compañia hay plenitud.",
+    "Porque apareciste sin buscarlo.",
+    "Porque puedo ser yo mismo contigo.",
+    "Porque contigo la distancia se siente corta.",
+    "Porque tus abrazos, me dan paz.",
+    "Porque simplemente… eres tú, y eso ya lo es todo."
+  ],
+
+  /* --- ESCENA 8 (pétalos, deben ser 8) --- */
+
+petalosTitulo: "¡Feliz día de las flores amarillas! 🌻",
+
+mensajesPetalos: [
+  "Me alegra mucho haberte conocido 💛",
+  "Siempre es bonito compartir contigo 😊",
+  "Me encanta tu forma de ser ✨",
+  "Gracias por cada momento compartido 🌻",
+  "Tu sonrisa siempre alegra el día 😄",
+  "Espero que nunca te falten motivos para sonreír 💫",
+  "Qué bonito coincidir contigo 🌼",
+  "Y que sigamos compartiendo muchos momentos más 💛"
+],
+
+  mensajeFinalPetalos: "Eres mi flor más especial 🌻",
+
+  /* --- ESCENA 9 (galaxia) --- */
+  textoGalaxia: "Un universo entero\nde flores para ti",
+
+  /* --- ESCENA 10 (lámpara) --- */
+  lamparaTitulo: "Flores amarillas",
+  lamparaSub: "para ti, Doris",
+
+  /* --- ESCENA 11 --- */
+  bonitaTitulo: "Para la niña más bonita",
+
+  /* --- ESCENA 12 (sorpresa final) --- */
+  finalTexto: "Pase lo que pase, siempre vas a tener\nun jardín entero esperándote aquí.",
+  finalFirma: "Feliz día, Doris"
+};
+
+/* =====================================================================
+   2) MOTOR DE ESCENAS
+   ===================================================================== */
+const ORDEN = ["sc1","sc2","sc3","sc4","sc5","sc6","sc7","sc8","sc9","sc10","sc11","sc12"];
+const MOD = {};
+let actual = 0;
+const $ = (id) => document.getElementById(id);
+const rnd = (a,b) => a + Math.random()*(b-a);
+
+function irA(i){
+  if(i < 0 || i >= ORDEN.length || i === actual) return;
+  const anterior = ORDEN[actual], destino = ORDEN[i];
+  if(MOD[anterior] && MOD[anterior].salir) MOD[anterior].salir();
+  $(anterior).classList.remove("active");
+  actual = i;
+  $(destino).classList.add("active");
+  $(destino).scrollTop = 0;
+  $("progresoBarra").style.width = ((i+1)/ORDEN.length*100) + "%";
+  if(MOD[destino] && MOD[destino].entrar) MOD[destino].entrar();
+}
+const siguiente = () => irA(actual+1);
+function mostrarBoton(id, ms){ setTimeout(()=> $(id) && $(id).classList.add("show"), ms); }
+
+$("hudBack").addEventListener("click", ()=> irA(actual-1));
+$("progresoBarra").style.width = (1/ORDEN.length*100) + "%";
+
+/* --- música de fondo compartida --- */
+const musica = new Audio(CFG.cancion);
+musica.loop = true; musica.volume = 0.6;
+let musicaOk = true;
+musica.addEventListener("error", ()=>{ musicaOk = false; $("hudMusic").classList.add("off"); });
+$("hudMusic").addEventListener("click", ()=>{
+  if(!musicaOk) return;
+  if(musica.paused){ musica.play().catch(()=>{}); $("hudMusic").classList.remove("off"); }
+  else { musica.pause(); $("hudMusic").classList.add("off"); }
+  sincronizarBotonPlayer();
+});
+$("hudMusic").classList.add("off");
+
+/* --- imágenes con respaldo si el archivo no existe --- */
+function ponerImagen(img, src, emoji, etiqueta){
+  img.addEventListener("error", ()=>{
+    const d = document.createElement("div");
+    d.className = "img-fallback";
+    d.innerHTML = '<span>'+emoji+'</span><small>'+etiqueta+'</small>';
+    if(img.parentNode) img.parentNode.replaceChild(d, img);
+  });
+  img.src = src;
+}
+
+/* =====================================================================
+   3) GIRASOL SVG REUTILIZABLE
+   ===================================================================== */
+function girasolSVG(opts){
+  const o = Object.assign({ petalos:24, clase:"flower-svg", brillo:false }, opts||{});
+  const uid = "g" + Math.random().toString(36).slice(2,8);
+  let svg = '<svg viewBox="-100 -100 200 200" class="'+o.clase+'" xmlns="http://www.w3.org/2000/svg">'+
+  '<defs>'+
+    '<linearGradient id="pd'+uid+'" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f57c00"/><stop offset="100%" stop-color="#bf360c"/></linearGradient>'+
+    '<linearGradient id="pl'+uid+'" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#ffee58"/><stop offset="100%" stop-color="#f57f17"/></linearGradient>'+
+    '<radialGradient id="cc'+uid+'" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#4e342e"/><stop offset="60%" stop-color="#21120c"/><stop offset="100%" stop-color="#140a05"/></radialGradient>'+
+  '</defs><g>';
+  const n = o.petalos;
+  for(let i=0;i<n;i++){
+    const a = i*(360/n);
+    svg += '<path d="M 0 20 C -25 -30 -30 -90 0 -100 C 30 -90 25 -30 0 20 Z" fill="url(#pd'+uid+')" transform="rotate('+a+')"/>';
+  }
+  for(let i=0;i<n;i++){
+    const a = i*(360/n) + 180/n;
+    svg += '<path d="M 0 22 C -18 -30 -22 -85 0 -95 C 22 -85 18 -30 0 22 Z" fill="url(#pl'+uid+')" transform="rotate('+a+')"/>';
+  }
+  svg += '<circle cx="0" cy="0" r="45" fill="url(#cc'+uid+')"/>';
+  svg += '<circle cx="0" cy="0" r="40" fill="none" stroke="#8d6e63" stroke-width="2" stroke-dasharray="2 4" opacity=".6"/>';
+  for(let k=0;k<200;k++){
+    const r = 2.8*Math.sqrt(k), t = k*137.508*(Math.PI/180);
+    svg += '<circle cx="'+(r*Math.cos(t)).toFixed(2)+'" cy="'+(r*Math.sin(t)).toFixed(2)+'" r="1.5" fill="#000" opacity=".8"/>';
+  }
+  return svg + '</g></svg>';
+}
+
+/* girasol pequeño para el árbol (ligero) */
+function girasolMini(){
+  let s = '<g>';
+  for(let i=0;i<12;i++){
+    s += '<ellipse cx="0" cy="-7.5" rx="2.6" ry="5.4" fill="#ffd54a" transform="rotate('+(i*30)+')"/>';
+  }
+  s += '<circle r="3.6" fill="#4a2c0c"/></g>';
+  return s;
+}
+
+/* =====================================================================
+   4) ESCENA 1 · INTRO
+   ===================================================================== */
+MOD.sc1 = (function(){
+  let listo = false;
+  function entrar(){
+    if(listo) return; listo = true;
+
+    $("introTitle").textContent = CFG.introTitulo;
+    $("introName").textContent  = CFG.nombre;
+    ponerImagen($("imgStitch"), CFG.imgStitch, "💙", "jorge.jpg");
+    ponerImagen($("imgFlores"), CFG.imgFlores, "💐", "flores.jpg");
+
+    const tipos = ["🌻","🌼","✨","🌻","⭐","💛"];
+    const cont = $("parts1");
+    for(let i=0;i<16;i++){
+      const p = document.createElement("div");
+      p.className = "particula";
+      p.textContent = tipos[Math.floor(Math.random()*tipos.length)];
+      p.style.left = (Math.random()*100) + "vw";
+      p.style.animationDelay = (Math.random()*6) + "s";
+      p.style.animationDuration = (rnd(8,13)) + "s";
+      cont.appendChild(p);
+    }
+
+    setTimeout(()=> $("introTitle").classList.add("anim-baja"), 300);
+    setTimeout(()=> $("introName").classList.add("anim-nombre"), 1100);
+    setTimeout(()=> $("cardStitch").classList.add("anim-entra"), 1800);
+    setTimeout(()=> $("cardFlores").classList.add("anim-pop"), 2700);
+    
+    setTimeout(()=> $("btnCont1").classList.add("show"), 3600);
+    $("btnCont1").addEventListener("click", ()=> {
+      // Inicia la música automáticamente en el primer toque de pantalla
+      if(musica.paused){ 
+        musica.play().catch(()=>{}); 
+        $("hudMusic").classList.remove("off"); 
+        sincronizarBotonPlayer && sincronizarBotonPlayer();
+      }
+      siguiente(); 
+    });
+  }
+  return { entrar };
+})();
+
+/* =====================================================================
+   5) ESCENA 2 · EL RAMO QUE CRECE
+   ===================================================================== */
+MOD.sc2 = (function(){
+  let listo = false;
+  function estrellas(){
+    const c = $("estrellas2");
+    for(let i=0;i<70;i++){
+      const s = document.createElement("div");
+      s.className = "estrella";
+      const t = rnd(1,3);
+      s.style.cssText = "left:"+(Math.random()*100)+"vw;top:"+(Math.random()*100)+"vh;width:"+t+"px;height:"+t+"px;opacity:"+rnd(.25,1);
+      c.appendChild(s);
+    }
+    const emo = ["🦋","✨","🦋","💖","🦋"];
+    for(let j=0;j<5;j++){
+      const b = document.createElement("div");
+      b.className = "mariposa"; b.textContent = emo[j];
+      b.style.left = rnd(20,80) + "vw"; b.style.top = rnd(40,80) + "vh";
+      b.style.animationDelay = (j*2) + "s";
+      c.appendChild(b);
+    }
+  }
+  function crecerRamo(){
+    const cont = $("bouquetContainer");
+    /* 
+      AHORA LAS FLORES ESTÁN MÁS JUNTAS:
+      - Ángulos (a) menores para que no se separen a los lados.
+      - Alturas (h) más equilibradas para que los pétalos se toquen.
+    */
+    const plano = [
+      { a: 0,   h: 68, s: 1.25, z: 5 }, // CENTRO (Ajustado)
+      { a: -7,  h: 76, s: 1.05, z: 2 }, // Top izq
+      { a: 7,   h: 76, s: 1.05, z: 2 }, // Top der
+      { a: -14, h: 63, s: 1.05, z: 3 }, // Mid izq
+      { a: 14,  h: 63, s: 1.05, z: 3 }, // Mid der
+      { a: -7,  h: 53, s: 1.10, z: 6 }, // Bot izq
+      { a: 7,   h: 53, s: 1.10, z: 6 }  // Bot der
+    ];
+    plano.forEach((fl, i)=>{
+      const d = i*300;
+      const wrap = document.createElement("div");
+      wrap.className = "flower-wrapper";
+      wrap.style.transform = "rotate("+fl.a+"deg)";
+      wrap.style.zIndex = fl.z;
+      const tallo = document.createElement("div"); tallo.className = "stem";
+      const h1 = document.createElement("div"); h1.className = "stem-leaf left";  h1.style.bottom = (30+Math.random()*20)+"%";
+      const h2 = document.createElement("div"); h2.className = "stem-leaf right"; h2.style.bottom = (50+Math.random()*20)+"%";
+      const cabeza = document.createElement("div");
+      cabeza.className = "flower-head"; cabeza.innerHTML = girasolSVG();
+      cabeza.style.setProperty("--s", fl.s);
+      tallo.appendChild(h1); tallo.appendChild(h2); tallo.appendChild(cabeza);
+      wrap.appendChild(tallo); cont.appendChild(wrap);
+      setTimeout(()=> tallo.style.height = fl.h + "vh", 500 + d);
+      setTimeout(()=>{
+        h1.style.transform = "scale(1) rotate(-45deg) translateX(-5px)";
+        h2.style.transform = "scale(1) rotate(45deg) translateX(5px)";
+      }, 3500 + d);
+      setTimeout(()=> cabeza.classList.add("bloom"), 5500 + d);
+    });
+  }
+  function entrar(){
+    if(listo) return; listo = true;
+    $("ramoTitle").textContent = CFG.tituloRamo;
+    estrellas();
+    setTimeout(()=>{ $("ramoTitle").classList.add("show"); crecerRamo(); }, 700);
+    mostrarBoton("btnCont2", 11000);
+  }
+  return { entrar };
+})();
+$("btnCont2").addEventListener("click", siguiente);
+
+/* =====================================================================
+   6) ESCENA 3 · PORTAL + MONITO
+   ===================================================================== */
+MOD.sc3 = (function(){
+  let listo = false, activo = false;
+  function entrar(){
+    if(!listo){
+      listo = true;
+      $("portalFlor").innerHTML = girasolSVG({ clase:"" });
+      $("portalFlor").querySelector("svg").style.width = "100%";
+      $("portalFlor").querySelector("svg").style.height = "100%";
+      $("bocadilloMono").textContent = "¡Hola, " + CFG.nombre + "! Toca la flor… 🌻";
+      $("sc3").addEventListener("click", ()=>{ if(activo) siguiente(); });
+    }
+    activo = false;
+    setTimeout(()=> activo = true, 700);
+  }
+  function salir(){ activo = false; }
+  return { entrar, salir };
+})();
+
+/* =====================================================================
+   7) ESCENA 4 · EL ÁRBOL DE GIRASOLES
+   ===================================================================== */
+MOD.sc4 = (function(){
+  const NS = "http://www.w3.org/2000/svg";
+  let listo = false;
+
+  function construirArbol(){
+    const svg = $("treeSvg");
+    // Ajustamos el viewBox para dar mucho más espacio en la parte superior (-80)
+    svg.setAttribute("viewBox", "40 -110 340 460"); 
+    const ramas = [];
+    
+    function rama(x, y, largo, ang, ancho, prof){
+      const x2 = x + largo*Math.sin(ang), y2 = y - largo*Math.cos(ang);
+      const cx = x + largo*0.5*Math.sin(ang - 0.14), cy = y - largo*0.5*Math.cos(ang - 0.14);
+      ramas.push({ d:"M"+x+" "+y+" Q "+cx+" "+cy+" "+x2+" "+y2, w:ancho, prof:prof });
+      if(prof <= 0) return;
+      rama(x2, y2, largo*0.7, ang - rnd(0.25,0.45), ancho*0.6, prof-1);
+      rama(x2, y2, largo*0.7, ang + rnd(0.25,0.45), ancho*0.6, prof-1);
+      if(prof > 1 && Math.random() < 0.6) rama(x2, y2, largo*0.5, ang + rnd(-0.2,0.2), ancho*0.5, prof-2);
+    }
+    
+    /* 1. TRONCO MÁS LARGO para alcanzar las flores de arriba */
+    rama(210, 360, 140, 0, 26, 4);
+
+    const suelo = document.createElementNS(NS, "line");
+    suelo.setAttribute("x1", "0"); suelo.setAttribute("y1", "362");
+    suelo.setAttribute("x2", "420"); suelo.setAttribute("y2", "362");
+    suelo.setAttribute("stroke", "#3a2408"); suelo.setAttribute("stroke-width", "2");
+    suelo.setAttribute("opacity", ".8");
+    svg.appendChild(suelo);
+
+    ramas.forEach(r=>{
+      const p = document.createElementNS(NS, "path");
+      p.setAttribute("class", "rama");
+      p.setAttribute("d", r.d);
+      p.setAttribute("stroke-width", r.w.toFixed(1));
+      svg.appendChild(p);
+      const L = p.getTotalLength();
+      p.style.strokeDasharray = L; p.style.strokeDashoffset = L;
+      p.style.transition = "stroke-dashoffset 1.1s ease";
+      setTimeout(()=> p.style.strokeDashoffset = 0, 300 + (4 - r.prof)*600);
+    });
+
+    const puntos = [];
+    for(let k=0;k<1500;k++){ // Más puntos de base
+      const t = Math.random()*Math.PI*2;
+      const hx = 16*Math.pow(Math.sin(t),3);
+      const hy = 13*Math.cos(t) - 5*Math.cos(2*t) - 2*Math.cos(3*t) - Math.cos(4*t);
+      // Ajuste matemático para rellenar mejor el centro y los bordes
+      const f = 0.1 + 0.9*Math.sqrt(Math.random());
+      puntos.push({ x: hx*f, y: hy*f });
+    }
+    
+    /* 2. FLORES MÁS ARRIBA: cy0 baja a 70 para subir todo el bloque */
+    const escX = 145/16, escY = 145/15, cy0 = 90; 
+
+    const grupo = document.createElementNS(NS, "g");
+    svg.appendChild(grupo);
+    
+    /* 3. COPA SÚPER TUPIDA: 450 flores un poco más grandes para que no haya vacíos */
+    const elegidos = puntos.sort(()=> Math.random()-0.5).slice(0, 450); 
+    elegidos.forEach((pt, i)=>{
+      const x = 210 + pt.x*escX;
+      const y = cy0 - pt.y*escY;
+      const g = document.createElementNS(NS, "g");
+      g.setAttribute("transform", "translate("+x.toFixed(1)+","+y.toFixed(1)+")");
+      const inner = document.createElementNS(NS, "g");
+      inner.setAttribute("class", "fl-pop");
+      // Tamaño de las flores ligeramente aumentado (1.0 a 1.8)
+      inner.style.setProperty("--s", rnd(1.0, 1.8).toFixed(2));
+      inner.style.setProperty("--r", rnd(-30, 30).toFixed(0) + "deg");
+      inner.style.animationDelay = (2800 + i*8) + "ms"; 
+      inner.innerHTML = girasolMini();
+      g.appendChild(inner); grupo.appendChild(g);
+    });
+
+    for(let i=0;i<25;i++){
+      const p = document.createElement("div");
+      p.className = "petalo-cae";
+      p.textContent = Math.random() < .5 ? "🌼" : "🌻";
+      p.style.left = rnd(15,85) + "vw";
+      p.style.top  = rnd(12,45) + "vh";
+      p.style.animationDuration = rnd(7,13) + "s";
+      p.style.animationDelay = rnd(2,12) + "s";
+      $("sc4").appendChild(p);
+    }
+  }
+
+  function entrar(){
+    if(!listo){
+      listo = true;
+      $("tpTitle").textContent = CFG.arbolTitulo;
+      $("tpLine").textContent = CFG.arbolTexto;
+      $("tpFirma").textContent = CFG.arbolFirma;
+      construirArbol();
+      
+      /* 4. MOVER EL BOTÓN DESDE JS (Para asegurarnos de que se vaya a un costado) */
+      const btnWrap = $("btnCont4").parentElement;
+      btnWrap.style.justifyContent = "flex-end";
+      btnWrap.style.paddingRight = "8vw";
+
+      setTimeout(()=> $("treePanel").classList.add("show"), 6200);
+      mostrarBoton("btnCont4", 9500);
+    }
+  }
+  return { entrar };
+})();
+$("btnCont4").addEventListener("click", siguiente);
+
+
+
+/* =====================================================================
+   8) ESCENA 5 · FUEGOS ARTIFICIALES DE CORAZONES
+   ===================================================================== */
+MOD.sc5 = (function(){
+  let cv, ctx, W = 0, H = 0, raf = null, listo = false, corriendo = false;
+  let cohetes = [], chispas = [], fondo = [], lanzador = null;
+  const COLORES = ["#ffd24a","#ffb703","#ff8f1f","#ffe9a8","#ff6b8a","#ffd6e0"];
+
+  function medir(){
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = cv.clientWidth; H = cv.clientHeight;
+    cv.width = W*dpr; cv.height = H*dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    fondo = [];
+    for(let i=0;i<110;i++) fondo.push({ x:Math.random()*W, y:Math.random()*H, r:rnd(.4,1.5), a:rnd(.2,.9) });
+  }
+  function lanzar(tx, ty){
+    cohetes.push({
+      x: tx !== undefined ? W*0.5 + rnd(-40,40) : rnd(W*0.2, W*0.8),
+      y: H + 8,
+      tx: tx !== undefined ? tx : rnd(W*0.18, W*0.82),
+      ty: ty !== undefined ? ty : rnd(H*0.16, H*0.5),
+      c: COLORES[Math.floor(Math.random()*COLORES.length)],
+      estela: []
+    });
+  }
+  function explotar(x, y, color){
+    const N = 90, k = rnd(1.5, 2.3);
+    for(let i=0;i<N;i++){
+      const t = (i/N)*Math.PI*2;
+      const hx = 16*Math.pow(Math.sin(t),3);
+      const hy = 13*Math.cos(t) - 5*Math.cos(2*t) - 2*Math.cos(3*t) - Math.cos(4*t);
+      const j = rnd(0.86, 1.06);
+      chispas.push({
+        x:x, y:y,
+        vx: hx*k*j*0.14, vy: -hy*k*j*0.14,
+        vida: rnd(70,115), t:0, c: color, r: rnd(1.2,2.6)
+      });
+    }
+    for(let i=0;i<16;i++){
+      chispas.push({ x:x, y:y, vx:rnd(-2,2), vy:rnd(-2,2), vida:rnd(30,60), t:0, c:"#fff6d0", r:rnd(.8,1.8) });
+    }
+    flotante(x, y);
+  }
+  function flotante(x, y){
+    if(Math.random() > 0.55) return;
+    const w = CFG.palabrasFuegos[Math.floor(Math.random()*CFG.palabrasFuegos.length)];
+    const el = document.createElement("div");
+    el.className = "flota"; el.textContent = w;
+    el.style.left = Math.max(6, Math.min(W-90, x-30)) + "px";
+    el.style.top  = y + "px";
+    $("fwFlotantes").appendChild(el);
+    setTimeout(()=> el.remove(), 6200);
+  }
+  function bucle(){
+    ctx.fillStyle = "rgba(0,0,0,.20)";
+    ctx.fillRect(0,0,W,H);
+    ctx.globalCompositeOperation = "lighter";
+
+    fondo.forEach(s=>{
+      ctx.globalAlpha = s.a * (0.6 + 0.4*Math.sin(Date.now()/700 + s.x));
+      ctx.fillStyle = "#cfd8ff";
+      ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, 6.283); ctx.fill();
+    });
+    ctx.globalAlpha = 1;
+
+    for(let i=cohetes.length-1;i>=0;i--){
+      const c = cohetes[i];
+      const dx = c.tx - c.x, dy = c.ty - c.y;
+      c.x += dx*0.045; c.y += dy*0.045;
+      c.estela.push({x:c.x, y:c.y});
+      if(c.estela.length > 16) c.estela.shift();
+      c.estela.forEach((p, k)=>{
+        ctx.globalAlpha = (k/c.estela.length)*0.8;
+        ctx.fillStyle = c.c;
+        ctx.beginPath(); ctx.arc(p.x, p.y, 2.6*(k/c.estela.length)+0.6, 0, 6.283); ctx.fill();
+      });
+      ctx.globalAlpha = 1;
+      if(Math.abs(dy) < 6 && Math.abs(dx) < 6){ explotar(c.x, c.y, c.c); cohetes.splice(i,1); }
+    }
+
+    for(let i=chispas.length-1;i>=0;i--){
+      const p = chispas[i];
+      p.t++; p.x += p.vx; p.y += p.vy;
+      p.vy += 0.028; p.vx *= 0.985; p.vy *= 0.985;
+      const a = Math.max(0, 1 - p.t/p.vida);
+      ctx.globalAlpha = a;
+      ctx.fillStyle = p.c;
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.r*a + 0.3, 0, 6.283); ctx.fill();
+      if(p.t > p.vida) chispas.splice(i,1);
+    }
+    ctx.globalAlpha = 1;
+    ctx.globalCompositeOperation = "source-over";
+    if(corriendo) raf = requestAnimationFrame(bucle);
+  }
+  function entrar(){
+    if(!listo){
+      listo = true;
+      cv = $("fwCanvas"); ctx = cv.getContext("2d");
+      $("fwText").textContent = CFG.textoFuegos;
+      $("sc5").addEventListener("click", (e)=>{
+        if(e.target.closest("button")) return;
+        const r = cv.getBoundingClientRect();
+        lanzar(e.clientX - r.left, e.clientY - r.top);
+      });
+      window.addEventListener("resize", ()=>{ if(corriendo) medir(); });
+      mostrarBoton("btnCont5", 9000);
+      setTimeout(()=> $("fwText").classList.add("show"), 1400);
+    }
+    medir(); corriendo = true; bucle();
+    lanzar(); setTimeout(lanzar, 900); setTimeout(lanzar, 1700);
+    lanzador = setInterval(()=>{ if(chispas.length < 700) lanzar(); }, 1500);
+  }
+  function salir(){
+    corriendo = false; clearInterval(lanzador);
+    if(raf) cancelAnimationFrame(raf);
+    cohetes = []; chispas = [];
+  }
+  return { entrar, salir };
+})();
+$("btnCont5").addEventListener("click", siguiente);
+
+/* =====================================================================
+   9) ESCENA 6 · LA CARTA CON MÚSICA
+   ===================================================================== */
+function sincronizarBotonPlayer(){
+  const b = $("plBtn");
+  if(!b) return;
+  b.textContent = (musicaOk && !musica.paused) ? "❚❚" : "▶";
+}
+MOD.sc6 = (function(){
+  let listo = false, escribiendo = null, barra = null;
+
+  function ramoDeCarta(){
+    const svg = $("ramoMini");
+    const flores = [ {x:36,y:44,s:3.0}, {x:62,y:34,s:3.4}, {x:86,y:48,s:2.8}, {x:48,y:66,s:3.1}, {x:76,y:70,s:2.9} ];
+    let s = '<g stroke="#4f7d3a" stroke-width="3" fill="none" stroke-linecap="round">';
+    flores.forEach(f=> s += '<path d="M'+f.x+' '+f.y+' Q '+((f.x+60)/2)+' '+((f.y+110)/2)+' 60 118"/>');
+    s += '</g>';
+    s += '<path d="M14 86 L106 86 L84 156 Q60 164 36 156 Z" fill="#fff6e2" stroke="#e8d9b6" stroke-width="1.5"/>';
+    s += '<path d="M14 86 L60 118 L36 156 Z" fill="#f6ead0" opacity=".8"/>';
+    flores.forEach(f=>{
+      s += '<g transform="translate('+f.x+','+f.y+') scale('+f.s+')">' + girasolMini() + '</g>';
+    });
+    s += '<path d="M44 124 Q60 116 76 124" stroke="#e8955c" stroke-width="4" fill="none" stroke-linecap="round"/>';
+    s += '<path d="M60 122 C 46 110 40 124 58 124 C 40 128 50 138 60 126 C 70 138 80 128 62 124 C 80 124 74 110 60 122 Z" fill="#f2a06a"/>';
+    svg.innerHTML = s;
+  }
+
+  function escribir(){
+    const el = $("cartaTexto");
+    const txt = CFG.carta;
+    let i = 0;
+    el.textContent = "";
+    clearInterval(escribiendo);
+    escribiendo = setInterval(()=>{
+      i++;
+      el.textContent = txt.slice(0, i) + (i < txt.length ? "▍" : "");
+      if(i >= txt.length){
+        clearInterval(escribiendo);
+        $("cartaFirma").textContent = CFG.cartaFirma;
+        $("cartaFirma").classList.add("show");
+      }
+    }, 34);
+    $("cartaPapel").addEventListener("click", ()=>{
+      clearInterval(escribiendo);
+      el.textContent = txt;
+      $("cartaFirma").textContent = CFG.cartaFirma;
+      $("cartaFirma").classList.add("show");
+    });
+  }
+
+  function entrar(){
+    if(!listo){
+      listo = true;
+      $("plTitle").textContent = CFG.cancionTitulo;
+      $("plArtist").textContent = CFG.cancionArtista;
+      $("cartaIntro").textContent = CFG.cartaIntro;
+      $("cartaFoot").textContent = CFG.cartaPie;
+      ramoDeCarta();
+
+      for(let i=0;i<10;i++){
+        const p = document.createElement("div");
+        p.className = "petalo-aire";
+        p.textContent = ["🌼","🌻","🍃","💛"][Math.floor(Math.random()*4)];
+        p.style.left = rnd(-5,85) + "vw";
+        p.style.animationDuration = rnd(11,20) + "s";
+        p.style.animationDelay = rnd(0,12) + "s";
+        $("sc6").appendChild(p);
+      }
+
+      $("plBtn").addEventListener("click", ()=>{
+        if(!musicaOk){ $("plArtist").textContent = "No encuentro " + CFG.cancion; return; }
+        if(musica.paused){ musica.play().catch(()=>{}); $("hudMusic").classList.remove("off"); }
+        else { musica.pause(); $("hudMusic").classList.add("off"); }
+        sincronizarBotonPlayer();
+      });
+
+      setTimeout(()=> $("sobre").classList.add("abierto"), 1200);
+      setTimeout(()=>{ $("cartaPapel").classList.add("show"); }, 2100);
+      setTimeout(escribir, 3000);
+      mostrarBoton("btnCont6", 9000);
+    }
+    sincronizarBotonPlayer();
+    barra = setInterval(()=>{
+      if(musica.duration){ $("plFill").style.width = (musica.currentTime/musica.duration*100) + "%"; }
+      sincronizarBotonPlayer();
+    }, 500);
+  }
+  function salir(){ clearInterval(barra); }
+  return { entrar, salir };
+})();
+$("btnCont6").addEventListener("click", siguiente);
+
+/* =====================================================================
+   10) ESCENA 7 · LAS RAZONES
+   ===================================================================== */
+MOD.sc7 = (function(){
+  let listo = false;
+  const SLOTS = [
+    { t:18, c:1, w:66 },
+    { t:27, l:3, w:40 }, { t:27, r:3, w:40 },
+    { t:45, l:1, w:28 }, { t:45, r:1, w:28 },
+    { t:64, l:3, w:40 }, { t:64, r:3, w:40 },
+    { t:75, c:1, w:74 }
+  ];
+  function entrar(){
+    if(listo) return; listo = true;
+    $("razTitulo").textContent = CFG.razonesTitulo;
+    $("razSub").textContent = CFG.razonesSub;
+    $("razonFlower").innerHTML = girasolSVG({ clase:"" });
+
+    const wrap = $("razonesWrap");
+    CFG.razones.slice(0, SLOTS.length).forEach((txt, i)=>{
+      const s = SLOTS[i];
+      const d = document.createElement("div");
+      d.className = "razon";
+      d.textContent = txt;
+      d.style.top = s.t + "%";
+      d.style.width = s.w + "%";
+      if(s.c){ d.style.left = "50%"; d.style.marginLeft = "-" + (s.w/2) + "%"; d.style.textAlign = "center"; }
+      else if(s.l !== undefined){ d.style.left = s.l + "%"; d.style.textAlign = "center"; }
+      else { d.style.right = s.r + "%"; d.style.textAlign = "center"; }
+      wrap.appendChild(d);
+      setTimeout(()=> d.classList.add("show"), 900 + i*750);
+    });
+    mostrarBoton("btnCont7", 900 + CFG.razones.length*750 + 1200);
+  }
+  return { entrar };
+})();
+$("btnCont7").addEventListener("click", siguiente);
+
+/* =====================================================================
+   11) ESCENA 8 · LOS PÉTALOS CON MENSAJES
+   ===================================================================== */
+MOD.sc8 = (function(){
+  let listo = false, caidos = 0;
+
+  function confeti(){
+    const cont = $("sc8");
+    for(let i=0;i<70;i++){
+      const c = document.createElement("div");
+      const emo = ["💛","🌻","💖","✨","🌼"][Math.floor(Math.random()*5)];
+      c.textContent = emo;
+      c.style.cssText = "position:absolute;z-index:95;pointer-events:none;top:-8vh;font-size:"+rnd(12,24)+"px;left:"+rnd(0,100)+"vw;";
+      c.animate(
+        [{ transform:"translateY(0) rotate(0)", opacity:1 },
+         { transform:"translateY(115vh) rotate("+rnd(-540,540)+"deg)", opacity:.15 }],
+        { duration: rnd(2600,5200), delay: rnd(0,900), easing:"linear", fill:"forwards" }
+      );
+      cont.appendChild(c);
+      setTimeout(()=> c.remove(), 6500);
+    }
+  }
+
+  function burbuja(texto, x, y){
+    const b = document.createElement("div");
+    b.className = "burbuja";
+    b.textContent = texto;
+    const izq = x < window.innerWidth/2;
+    b.style.left = izq ? "4vw" : "auto";
+    b.style.right = izq ? "auto" : "4vw";
+    b.style.top = Math.max(60, Math.min(window.innerHeight - 160, y - 30)) + "px";
+    $("burbujas").appendChild(b);
+    setTimeout(()=> b.remove(), 6200);
+  }
+
+  function entrar(){
+    if(listo) return; listo = true;
+    $("petalosTitulo").textContent = CFG.petalosTitulo;
+    $("modalTexto").textContent = CFG.mensajeFinalPetalos;
+    ponerImagen($("imgModal"), CFG.imgFloress, "💐", "amarillas.jpeg");
+
+    const cb = $("corazonesBg");
+    for(let i=0;i<26;i++){
+      const h = document.createElement("div");
+      h.className = "mini-corazon";
+      h.textContent = ["💛","🤍","💛","🌼"][Math.floor(Math.random()*4)];
+      h.style.left = rnd(0,98) + "vw";
+      h.style.top = rnd(0,100) + "vh";
+      h.style.animationDuration = rnd(9,18) + "s";
+      h.style.animationDelay = rnd(0,10) + "s";
+      cb.appendChild(h);
+    }
+
+    const flor = $("petalFlower");
+    const N = 8;
+    for(let i=0;i<N;i++){
+      const ang = i*(360/N);
+      const slot = document.createElement("div");
+      slot.className = "petalo-slot";
+      slot.style.transform = "rotate("+ang+"deg) translateY(-110%)";
+      const b = document.createElement("button");
+      b.className = "petalo-btn";
+      b.setAttribute("aria-label", "Pétalo " + (i+1));
+      slot.appendChild(b);
+      flor.appendChild(slot);
+
+      b.addEventListener("click", ()=>{
+        if(b.dataset.caido) return;
+        b.dataset.caido = "1";
+        const r = b.getBoundingClientRect();
+        burbuja(CFG.mensajesPetalos[i % CFG.mensajesPetalos.length], r.left + r.width/2, r.top);
+        const dx = rnd(-90, 90), dy = window.innerHeight*0.75, giro = rnd(-420, 420);
+        b.style.transform = "rotate("+(-ang)+"deg) translate("+dx+"px,"+dy+"px) rotate("+giro+"deg)";
+        b.style.opacity = "0";
+        caidos++;
+        if(caidos === N){
+          setTimeout(()=>{ confeti(); $("petalModal").classList.add("show"); $("btnCont8").classList.add("show"); }, 1200);
+          $("hintPetalos").textContent = "Ya los tienes todos 💛";
+        }
+      });
+    }
+    $("hintPetalos").textContent = CFG.mensajesPetalos.length ? "Toca los pétalos y descubre lo que siento por ti 🌻" : "";
+    $("modalX").addEventListener("click", ()=> $("petalModal").classList.remove("show"));
+    $("petalModal").addEventListener("click", (e)=>{ if(e.target === $("petalModal")) $("petalModal").classList.remove("show"); });
+    mostrarBoton("btnCont8", 18000);
+  }
+  return { entrar };
+})();
+$("btnCont8").addEventListener("click", siguiente);
+
+/* =====================================================================
+   12) ESCENA 9 · LA FLOR GALAXIA
+   ===================================================================== */
+MOD.sc9 = (function(){
+  let cv, ctx, W=0, H=0, raf=null, listo=false, corriendo=false;
+  let flor = [], anillos = [], estrellas = [], rot = 0, t = 0, turbo = 1;
+
+  function medir(){
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = cv.clientWidth; H = cv.clientHeight;
+    cv.width = W*dpr; cv.height = H*dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    estrellas = [];
+    for(let i=0;i<150;i++) estrellas.push({ x:rnd(-W,W), y:rnd(-H,H), z:rnd(0.15,1) });
+  }
+  function construir(){
+    for(let i=0;i<820;i++){
+      const a = Math.random()*Math.PI*2;
+      const forma = Math.abs(Math.cos(4*a));
+      const f = Math.pow(Math.random(), 0.5);
+      flor.push({ a:a, r:forma*f, b:rnd(.35,1), d:rnd(.985,1.015) });
+    }
+    [ {R:1.55, tilt:0.22, rot:-0.5, n:230, c:"#d9a441"},
+      {R:2.15, tilt:0.16, rot:0.35, n:260, c:"#c8912f"},
+      {R:1.15, tilt:0.30, rot:1.1,  n:170, c:"#ffd76b"} ].forEach(cfg=>{
+      const pts = [];
+      for(let i=0;i<cfg.n;i++) pts.push({ f: Math.random()*Math.PI*2, j: rnd(.93,1.07), b: rnd(.3,1) });
+      anillos.push({ cfg:cfg, pts:pts, giro:0 });
+    });
+  }
+  function bucle(){
+    ctx.fillStyle = "rgba(0,0,0,.28)"; ctx.fillRect(0,0,W,H);
+    ctx.globalCompositeOperation = "lighter";
+    t += 0.005; rot += 0.0022*turbo;
+    turbo += (1 - turbo)*0.02;
+
+    const cx = W/2 + Math.sin(t*0.8)*W*0.05;
+    const cy = H*0.52 + Math.cos(t*0.6)*H*0.035;
+    const R  = Math.min(W,H)*0.21;
+
+    estrellas.forEach(s=>{
+      s.z -= 0.0022*turbo;
+      if(s.z <= 0.05){ s.x = rnd(-W,W); s.y = rnd(-H,H); s.z = 1; }
+      const px = cx + s.x/s.z*0.35, py = cy + s.y/s.z*0.35;
+      if(px < -20 || px > W+20 || py < -20 || py > H+20) return;
+      const al = (1 - s.z)*0.9;
+      ctx.globalAlpha = al; ctx.fillStyle = "#fff";
+      ctx.beginPath(); ctx.arc(px, py, (1-s.z)*1.8+0.3, 0, 6.283); ctx.fill();
+    });
+
+    anillos.forEach(an=>{
+      an.giro += 0.0016*turbo*(an.cfg.rot > 0 ? 1 : -1);
+      const cos = Math.cos(an.cfg.rot + an.giro*0.4), sin = Math.sin(an.cfg.rot + an.giro*0.4);
+      an.pts.forEach(p=>{
+        p.f += 0.0025*turbo;
+        const rr = R*an.cfg.R*p.j;
+        const ax = Math.cos(p.f)*rr, ay = Math.sin(p.f)*rr*an.cfg.tilt;
+        const x = cx + ax*cos - ay*sin, y = cy + ax*sin + ay*cos;
+        ctx.globalAlpha = p.b*0.55;
+        ctx.fillStyle = an.cfg.c;
+        ctx.beginPath(); ctx.arc(x, y, 1.15, 0, 6.283); ctx.fill();
+      });
+    });
+
+    const halo = ctx.createRadialGradient(cx, cy, 0, cx, cy, R*1.5);
+    halo.addColorStop(0, "rgba(255,225,130,.55)");
+    halo.addColorStop(.35, "rgba(255,180,40,.18)");
+    halo.addColorStop(1, "rgba(255,160,0,0)");
+    ctx.globalAlpha = 1; ctx.fillStyle = halo;
+    ctx.beginPath(); ctx.arc(cx, cy, R*1.5, 0, 6.283); ctx.fill();
+
+    flor.forEach(p=>{
+      const a = p.a + rot;
+      const rr = p.r*R*(1 + Math.sin(t*2 + p.a*3)*0.02);
+      const x = cx + Math.cos(a)*rr, y = cy + Math.sin(a)*rr*0.97;
+      ctx.globalAlpha = p.b;
+      ctx.fillStyle = p.r > 0.75 ? "#fff0b8" : "#ffd24a";
+      ctx.beginPath(); ctx.arc(x, y, p.r > 0.8 ? 1.9 : 1.5, 0, 6.283); ctx.fill();
+    });
+
+    ctx.globalAlpha = 1; ctx.globalCompositeOperation = "source-over";
+    if(corriendo) raf = requestAnimationFrame(bucle);
+  }
+  function entrar(){
+    if(!listo){
+      listo = true;
+      cv = $("galaxiaCanvas"); ctx = cv.getContext("2d");
+      $("galaxiaTexto").textContent = CFG.textoGalaxia;
+      construir();
+      $("sc9").addEventListener("click", (e)=>{ if(!e.target.closest("button")) turbo = 5.5; });
+      window.addEventListener("resize", ()=>{ if(corriendo) medir(); });
+      setTimeout(()=>{ $("galaxiaTexto").classList.add("show"); $("galaxiaSub").classList.add("show"); }, 1200);
+      mostrarBoton("btnCont9", 9000);
+    }
+    medir(); corriendo = true; bucle();
+  }
+  function salir(){ corriendo = false; if(raf) cancelAnimationFrame(raf); }
+  return { entrar, salir };
+})();
+$("btnCont9").addEventListener("click", siguiente);
+
+/* =====================================================================
+   13) ESCENA 10 · LA LÁMPARA
+   ===================================================================== */
+MOD.sc10 = (function(){
+  let listo = false;
+  function entrar(){
+    if(listo) return; listo = true;
+    $("lamparaTitulo").innerHTML = CFG.lamparaTitulo + "<small>" + CFG.lamparaSub + "</small>";
+    for(let i=0;i<16;i++){
+      const l = document.createElement("div");
+      l.className = "luciernaga";
+      l.style.left = rnd(10,90) + "vw";
+      l.style.top  = rnd(30,85) + "vh";
+      l.style.setProperty("--lx", rnd(-80,80) + "px");
+      l.style.setProperty("--ly", rnd(-140,-40) + "px");
+      l.style.animationDuration = rnd(6,12) + "s";
+      l.style.animationDelay = rnd(0,8) + "s";
+      $("sc10").appendChild(l);
+    }
+    
+    $("btnLuz").onclick = () => {
+      $("sc10").classList.toggle("encendida");
+      $("btnLuz").textContent = $("sc10").classList.contains("encendida") ? "Se ve preciosa ✨" : "Toca la luz ✨";
+      $("btnCont10").classList.add("show");
+    };
+    
+    mostrarBoton("btnCont10", 7000);
+
+    // Forzamos la acción de avanzar explícitamente para que no falle en celulares
+    $("btnCont10").onclick = siguiente;
+  }
+  return { entrar };
+})();
+
+
+/* =====================================================================
+   14) ESCENA 11 · PARA LA NIÑA MÁS BONITA
+   ===================================================================== */
+MOD.sc11 = (function(){
+  const NS = "http://www.w3.org/2000/svg";
+  let listo = false;
+
+  function dibujarFlor(){
+    const cont = $("bonitaFlor");
+    const svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("viewBox", "0 0 400 520");
+    cont.appendChild(svg);
+
+    const g = document.createElementNS(NS, "g");
+    g.setAttribute("transform", "translate(200,190)");
+    svg.appendChild(g);
+
+    const PET = 14, CAPAS = 7;
+    const rutas = [];
+    for(let i=0;i<PET;i++){
+      const ang = i*(360/PET);
+      for(let k=0;k<CAPAS;k++){
+        const esc = 1 - k*0.105;
+        const p = document.createElementNS(NS, "path");
+        p.setAttribute("d", "M0 0 C -28 -58 -22 -128 0 -162 C 22 -128 28 -58 0 0 Z");
+        p.setAttribute("transform", "rotate("+ang+") scale("+esc.toFixed(3)+")");
+        p.setAttribute("fill", "none");
+        p.setAttribute("stroke", k < 2 ? "#e8b42a" : (k < 4 ? "#d99a17" : "#b87a10"));
+        p.setAttribute("stroke-width", (1.5 - k*0.08).toFixed(2));
+        g.appendChild(p); rutas.push({ el:p, orden:k });
+      }
+    }
+    for(let k=0;k<9;k++){
+      const c = document.createElementNS(NS, "circle");
+      c.setAttribute("r", (54 - k*5.4).toFixed(1));
+      c.setAttribute("fill", "none");
+      c.setAttribute("stroke", k < 3 ? "#8c1b22" : "#6d1119");
+      c.setAttribute("stroke-width", "1.4");
+      g.appendChild(c); rutas.push({ el:c, orden:8 });
+    }
+    for(let n=0;n<130;n++){
+      const r = 3.6*Math.sqrt(n), th = n*137.508*(Math.PI/180);
+      if(r > 50) continue;
+      const d = document.createElementNS(NS, "circle");
+      d.setAttribute("cx", (r*Math.cos(th)).toFixed(1));
+      d.setAttribute("cy", (r*Math.sin(th)).toFixed(1));
+      d.setAttribute("r", "1.5");
+      d.setAttribute("fill", "#5c0f16");
+      d.style.opacity = "0";
+      d.style.transition = "opacity .6s ease " + (2400 + n*6) + "ms";
+      g.appendChild(d);
+      setTimeout(()=> d.style.opacity = "1", 60);
+    }
+
+    const tallo = document.createElementNS(NS, "path");
+    tallo.setAttribute("d", "M200 350 C 196 400 202 450 198 500");
+    tallo.setAttribute("fill", "none"); tallo.setAttribute("stroke", "#2f9e3f");
+    tallo.setAttribute("stroke-width", "6"); tallo.setAttribute("stroke-linecap", "round");
+    svg.appendChild(tallo); rutas.push({ el:tallo, orden:9 });
+
+    const hoja = document.createElementNS(NS, "path");
+    hoja.setAttribute("d", "M199 415 C 168 400 150 418 148 440 C 172 452 194 440 199 415 Z");
+    hoja.setAttribute("fill", "#2f9e3f"); hoja.style.opacity = "0";
+    hoja.style.transition = "opacity 1.2s ease";
+    svg.appendChild(hoja);
+    setTimeout(()=> hoja.style.opacity = "1", 2600);
+
+    rutas.forEach(r=>{
+      let L = 400;
+      try { L = r.el.getTotalLength(); } catch(e){}
+      r.el.style.setProperty("--l", L);
+      r.el.style.strokeDasharray = L;
+      r.el.style.strokeDashoffset = L;
+      r.el.style.transition = "stroke-dashoffset 1.4s ease " + (300 + r.orden*180 + Math.random()*260) + "ms";
+      setTimeout(()=> r.el.style.strokeDashoffset = "0", 60);
+    });
+
+    for(let i=0;i<44;i++){
+      const e = document.createElement("div");
+      e.className = "estrella-brilla";
+      e.textContent = Math.random() < .25 ? "✦" : "★";
+      e.style.left = rnd(1,96) + "vw";
+      e.style.top  = rnd(2,96) + "vh";
+      e.style.fontSize = rnd(7,16) + "px";
+      e.style.animationDuration = rnd(1.2,3.4) + "s";
+      e.style.animationDelay = rnd(0,3) + "s";
+      $("sc11").appendChild(e);
+    }
+  }
+  function entrar(){
+    if(listo) return; listo = true;
+    $("bonitaTitulo").textContent = CFG.bonitaTitulo;
+    $("bonitaFirma").textContent = CFG.apodo;
+    dibujarFlor();
+    setTimeout(()=> $("bonitaTitulo").classList.add("show"), 400);
+    setTimeout(()=> $("bonitaFirma").classList.add("show"), 4200);
+    mostrarBoton("btnCont11", 6000);
+  }
+  return { entrar };
+})();
+$("btnCont11").addEventListener("click", siguiente);
+
+/* =====================================================================
+   15) ESCENA 12 · LA SORPRESA FINAL
+   ===================================================================== */
+MOD.sc12 = (function(){
+  let cv, ctx, W=0, H=0, raf=null, listo=false, corriendo=false;
+  let ps = [], fase = "espera";
+
+  function medir(){
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = cv.clientWidth; H = cv.clientHeight;
+    cv.width = W*dpr; cv.height = H*dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+
+  function objetivos(){
+    const off = document.createElement("canvas");
+    off.width = W; off.height = H;
+    const c = off.getContext("2d");
+    let size = Math.min(W * 0.38, H * 0.32);
+    const nombre = CFG.nombre.toUpperCase();
+    c.textAlign = "center"; c.textBaseline = "middle"; c.fillStyle = "#fff";
+    c.font = "700 " + size + "px Poppins, Arial, sans-serif";
+    while(c.measureText(nombre).width > W * 0.86 && size > 18){
+      size -= 2; c.font = "700 " + size + "px Poppins, Arial, sans-serif";
+    }
+    c.fillText(nombre, W/2, H * 0.18);
+    const data = c.getImageData(0, 0, W, H).data;
+    const paso = Math.max(2, Math.round(W / 110));
+    const pts = [];
+    for(let y = 0; y < H; y += paso){
+      for(let x = 0; x < W; x += paso){
+        if(data[(y * W + x) * 4 + 3] > 130) pts.push({ x: x, y: y });
+      }
+    }
+    return pts;
+  }
+
+  function estallar(){
+    medir();
+    const metas = objetivos();
+    ps = [];
+    const cx = W/2, cy = H/2;
+    metas.forEach(m=>{
+      const a = Math.random()*Math.PI*2, v = rnd(4, 15);
+      ps.push({
+        x: cx + Math.cos(a)*rnd(0,30), y: cy + Math.sin(a)*rnd(0,30),
+        vx: Math.cos(a)*v, vy: Math.sin(a)*v - 3,
+        tx: m.x, ty: m.y, b: rnd(.5,1)
+      });
+    });
+    fase = "vuela";
+    setTimeout(()=> fase = "forma", 900);
+    setTimeout(()=>{ 
+      $("contenidoFinalDoris").style.opacity = "1";
+      $("contenidoFinalDoris").style.pointerEvents = "auto";
+      lluvia(); 
+    }, 2800);
+  }
+
+  function lluvia(){
+    for(let i=0;i<26;i++){
+      const d = document.createElement("div");
+      d.className = "lluvia";
+      d.textContent = ["🌻","💛","✨","🌼"][Math.floor(Math.random()*4)];
+      d.style.left = rnd(0,98) + "vw";
+      d.style.animationDuration = rnd(7,14) + "s";
+      d.style.animationDelay = rnd(0,8) + "s";
+      $("sc12").appendChild(d);
+    }
+  }
+
+  function bucle(){
+    if(fase === "espera"){ 
+      ctx.clearRect(0,0,W,H); 
+    } else { 
+      ctx.fillStyle = "rgba(10,5,20,.25)"; 
+      ctx.fillRect(0,0,W,H); 
+      ctx.globalCompositeOperation = "lighter";
+      ps.forEach(p=>{
+        if(fase === "vuela"){
+          p.x += p.vx; p.y += p.vy; p.vx *= 0.93; p.vy = p.vy*0.93 + 0.12;
+        } else {
+          p.x += (p.tx - p.x)*0.07 + Math.sin((Date.now()+p.tx)/600)*0.1;
+          p.y += (p.ty - p.y)*0.07 + Math.cos((Date.now()+p.ty)/600)*0.1;
+        }
+        ctx.globalAlpha = p.b;
+        ctx.fillStyle = Math.random() < .15 ? "#fff6d0" : "#ffc93c";
+        ctx.beginPath(); ctx.arc(p.x, p.y, 1.7, 0, 6.283); ctx.fill();
+      });
+      ctx.globalAlpha = 1; 
+      ctx.globalCompositeOperation = "source-over";
+    }
+    if(corriendo) raf = requestAnimationFrame(bucle);
+  }
+
+  function abrir(){
+    medir();
+    $("regaloWrap").style.opacity = "0";
+    $("regaloWrap").style.pointerEvents = "none";
+    const tapa = document.getElementById("tapaRegalo");
+    if(tapa){
+      tapa.style.transition = "transform 1s cubic-bezier(.34,1.56,.64,1)";
+      tapa.style.transform = "translateY(-70px) rotate(-18deg)";
+    }
+    setTimeout(estallar, 400);
+  }
+
+  function entrar(){
+    if(!listo){
+      listo = true;
+      cv = $("nombreCanvas"); ctx = cv.getContext("2d");
+      $("finalTexto").textContent = CFG.finalTexto;
+      $("finalFirma").textContent = CFG.finalFirma;
+
+      ponerImagen($("imgFoto1"), CFG.celis, "💐", "celis.jpeg");
+      ponerImagen($("imgFoto2"), CFG.doris, "�", "doris.jpeg");
+
+      ["foto1", "foto2"].forEach(id => {
+        $(id).addEventListener("click", () => {
+          $(id).classList.toggle("nitida");
+        });
+      });
+
+      $("regalo").addEventListener("click", abrir);
+      $("btnOtraVez").addEventListener("click", ()=> location.reload());
+      $("btnRepetirSorpresa").addEventListener("click", ()=>{ 
+        fase = "espera"; ps = []; 
+        $("contenidoFinalDoris").style.opacity = "0";
+        $("contenidoFinalDoris").style.pointerEvents = "none";
+        $("regaloWrap").style.opacity = "1";
+        $("regaloWrap").style.pointerEvents = "auto";
+        const tapa = document.getElementById("tapaRegalo");
+        if(tapa) tapa.style.transform = "none";
+        setTimeout(estallar, 300); 
+      });
+      window.addEventListener("resize", ()=>{ if(corriendo) medir(); });
+    }
+    $("regaloWrap").style.opacity = "1";
+    $("regaloWrap").style.pointerEvents = "auto";
+    const tapa = document.getElementById("tapaRegalo");
+    if(tapa) tapa.style.transform = "none";
+    $("contenidoFinalDoris").style.opacity = "0";
+    $("contenidoFinalDoris").style.pointerEvents = "none";
+
+    medir(); corriendo = true; bucle();
+  }
+
+  function salir(){ corriendo = false; if(raf) cancelAnimationFrame(raf); }
+  return { entrar, salir };
+})();
+
+
+/* =====================================================================
+   16. ARRANQUE  (con seguridad de palabra mágica)
+   ===================================================================== */
+document.addEventListener("gesturestart", e => e.preventDefault());
+
+const PALABRA_MAGICA = "11";
+let experienciaIniciada = false;
+
+const lockScreen   = document.getElementById("lockScreen");
+const lockInput    = document.getElementById("lockInput");
+const lockBtn      = document.getElementById("lockBtn");
+const lockError    = document.getElementById("lockError");
+const errorOverlay = document.getElementById("errorOverlay");
+const errorVideo   = document.getElementById("errorVideo");
+const btnReintentar= document.getElementById("btnReintentar");
+
+function iniciarExperiencia(){
+  lockScreen.classList.add("oculto");
+  if(!experienciaIniciada){
+    experienciaIniciada = true;
+    MOD.sc1.entrar();
+  }
+}
+
+function mostrarError(){
+  errorOverlay.classList.add("activo");
+  try {
+    errorVideo.currentTime = 0;
+    errorVideo.muted = false;
+    errorVideo.volume = 1;
+    errorVideo.play().catch(()=>{});
+  } catch(e){}
+}
+
+function ocultarError(){
+  errorOverlay.classList.remove("activo");
+  try { errorVideo.pause(); } catch(e){}
+}
+
+function validarPalabra(){
+  const valor = String(lockInput.value || "").trim();
+  if(valor === PALABRA_MAGICA){
+    lockError.textContent = "";
+    iniciarExperiencia();
+  } else {
+    lockError.textContent = "Palabra incorrecta…";
+    mostrarError();
+  }
+}
+
+lockBtn.addEventListener("click", validarPalabra);
+lockInput.addEventListener("keydown", (e)=>{
+  if(e.key === "Enter"){ e.preventDefault(); validarPalabra(); }
+});
+
+btnReintentar.addEventListener("click", ()=>{
+  ocultarError();
+  lockInput.value = "";
+  lockInput.focus();
+});
+
+
+// ==========================================================
+// CONFIGURACIÓN DE ANALÍTICA PARA LA SEGUNDA PÁGINA (D2 y E2)
+// ==========================================================
+const API_URL_PAGINA_2 = "https://script.google.com/macros/s/AKfycbw7jSqnyqF6zFMufnFOAFxJUrGm0KE05Jg_ahvgvp_9_fQpya6arfI9Q6ycKkKC05HVVg/exec";
+
+function registrarMetricaSegundaPagina(tipo) {
+  fetch(API_URL_PAGINA_2, {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ type: tipo })
+  }).catch(() => {
+    // Se ejecuta de forma silenciosa y veloz en segundo plano
+  });
+}
+
+// 1. Registra la recarga/visita en la celda E2 al abrir la segunda página
+window.addEventListener("load", () => {
+  registrarMetricaSegundaPagina("recarga");
+});
+
+// 2. Registra los clics en la celda D2 de la segunda página
+document.addEventListener("click", () => {
+  registrarMetricaSegundaPagina("click");
+});
+
+// Botón temporal para saltar a la escena 11 (Índice 10, ya que empiezan en 0)
+$("btnSaltoRapido").addEventListener("click", () => {
+  irA(11); // El número 10 corresponde a la escena 11 (sc11)
+});
+
+
+</script>
+</body>
+</html>
